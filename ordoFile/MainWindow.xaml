@@ -1,0 +1,551 @@
+﻿<Window x:Class="ordoFile.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ordoFile" Height="500" Width="815">
+    <Grid Name="ContentGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Name="WaitGrid" 
+              Grid.RowSpan="3"  
+              Background="Gray" 
+              Panel.ZIndex="0" 
+              Opacity="0.5">
+        </Grid>
+
+        <Grid Name="WaitImageGrid"
+              Grid.RowSpan="3"  
+              Panel.ZIndex="0">
+
+            <Image Name="LoadingImage" 
+                   Width="150" 
+                   Height="150" 
+                   Panel.ZIndex="1">  
+            </Image>
+            <Label Content="Loading directories"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"  
+                   Panel.ZIndex="2">
+            </Label>
+        </Grid>
+
+        <!-- Upper grid items(for selecting folder and/or subfolders-->
+        <Canvas Grid.RowSpan="2">
+            <Canvas.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#59604E" Offset="0" />
+                    <GradientStop Color="#0C2738" Offset="0.205" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+        </Canvas>
+        
+        <Grid Name="SidebarGrid" 
+              Grid.RowSpan="3" 
+              Panel.ZIndex="-5">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition ></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <Grid Name="FilterDirsGrid" 
+                  Grid.Column="1" 
+                  Background="Silver" 
+                  Panel.ZIndex="-1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            
+                <Border Grid.Column="0" Background="DarkGray">
+                </Border>
+
+                <Grid Grid.Column="1" Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Background="Silver">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Margin="10" 
+                                Content="Done" 
+                                Click="ExitSubdirGridBtn_Click">
+                        </Button>
+                        <CheckBox Name="FilterSubDirsCheckBox" 
+                                  Content="Uncheck affects subdirectoies"
+                                  Grid.Column="1" 
+                                  IsChecked="True" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center">
+                        </CheckBox>
+                    </Grid>
+
+                    <TreeView Name="FolderTree"
+                              xmlns:obj="clr-namespace:ordoFile.Models"
+                              BorderThickness="0" 
+                              Margin="0"   
+                              Grid.Row="1">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" 
+                                        Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type obj:DirectoryModel}" 
+                                                      ItemsSource="{Binding Path=Subdirectories}">
+                                <CheckBox Content="{Binding Path=Name}" 
+                                          IsChecked="{Binding Path=IsChecked}"></CheckBox>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </Grid>
+            
+            <Grid Name="FileTypeGrid" 
+                  Background="White" 
+                  Grid.Column="1"
+                  Panel.ZIndex="-2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="Silver">
+                </Border>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid Background="Silver">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Name="ExitTypeGridBtn" 
+                                Content="Done"
+                                Margin="10"  
+                                Click="ExitTypeGridBtn_Click">
+                        </Button>
+                        
+                        <Button Name="SaveAsPresetBtn"
+                                Content="Save as preset"
+                                Grid.Column="1"  
+                                Margin="10"  
+                                Click="SaveAsPresetBtn_Click">
+                        </Button>
+                    </Grid>
+
+                    <Grid Name="SavePresetGrid" 
+                          Grid.Row="0"  
+                          Panel.ZIndex="-1"  
+                          Background="Silver">
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel>
+                            <Label>Preset Name:</Label>
+                            <TextBox Name="PresetTextBox" 
+                                     Margin="5 0 0 0">
+                                
+                            </TextBox>
+                        </StackPanel>
+                        <Button Name="SavePresetBtn" 
+                                Grid.Column="1"  
+                                Margin="10" 
+                                Content="Save" 
+                                Click="SavePresetBtn_Click">
+                            
+                        </Button>
+
+                    </Grid>
+
+                    <ItemsControl Name="TypesControl"
+                                  Grid.Row="1"  
+                                  Margin="10">
+                        
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <WrapPanel  FlowDirection="LeftToRight" 
+                                            IsItemsHost="True">
+                                </WrapPanel>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Checked="TypeCheckBox_Check" 
+                                          Unchecked="TypeCheckBox_Check" 
+                                          Width="75"
+                                          Height="20"
+                                          IsChecked="True"
+                                          Content="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+
+            <Grid Name="ChoosePresetGrid"
+                  Grid.Column="1"
+                  Background="White"
+                  Panel.ZIndex="-3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="Silver">
+                </Border>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="3*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid Background="Silver">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Name="SelectPresetBtn"
+                                Grid.Column="0"
+                                Content="Select and exit"
+                                Margin="10" 
+                                Click="SelectPresetBtn_Click">
+                        </Button>
+                        
+                        <Button Name="ExitPresetBtn"
+                                Grid.Column="1"
+                                Content="Exit without selecting"
+                                Margin="10" 
+                                Click="ExitPresetBtn_Click">
+                        </Button>
+                       
+                    </Grid>
+
+                    <ListBox Name="PresetsListBox" 
+                             Grid.Row="1" SelectionChanged="PresetsListBox_SelectionChanged">
+
+                    </ListBox>
+                    
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="3*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBox Name="EditPresetNameTextBox" 
+                                     Grid.Row="0"  
+                                     Margin="5" 
+                                     Height="25" 
+                                     IsEnabled="False">
+                            </TextBox>
+
+                            <Border Grid.Row="1"
+                                    Margin="5"
+                                    BorderBrush="Silver"
+                                    BorderThickness="1">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl Name="EditPresetTypesPanel">
+                                    <ItemsControl.Template>
+                                        <ControlTemplate>
+                                            <WrapPanel FlowDirection="LeftToRight" 
+                                                       IsItemsHost="True"
+                                                       >
+                                            </WrapPanel>
+                                        </ControlTemplate>
+                                    </ItemsControl.Template>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding}"
+                                                      Height="20"
+                                                      Width="75"
+                                                      Checked="EditPresetTypeCheckBox_Checked"
+                                                      Unchecked="EditPresetTypeCheckBox_Checked"
+                                                      IsChecked="True">
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="2*"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Button Name="SavePresetEditsBtn" 
+                                    Content="Save Changes"
+                                    Margin="5" 
+                                    Click="SavePresetEditsBtn_Click" 
+                                    IsEnabled="False">
+
+                            </Button>
+
+                            <Label Name="EditPresetLabel"
+                                   Grid.Row="1"></Label>
+
+                            <TextBox Name="AddTypeTextBox"
+                                     Grid.Row="2" 
+                                     IsEnabled="False"
+                                     Margin="5 0 5 0"></TextBox>
+                            
+                            <Button Name="AddTypeButton"
+                                    Content="Add Filetype"
+                                    Grid.Row="3"
+                                    Margin="5" 
+                                    IsEnabled="False"
+                                    Click="AddTypeBtn_Click"></Button>
+                            
+                            
+                            
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Name="ChooseFolderBtn" 
+                            Content="Choose Folder" 
+                            Grid.Column="0" 
+                            Margin="10 10 10 0"   
+                            Click="OnChooseFolderClick">
+                    </Button>
+                    
+                    <CheckBox Name="SubdirCheckbox" 
+                              Content="Include Subdirectories" 
+                              Grid.Column="1" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" 
+                              Margin="0" 
+                              Foreground="White"  
+                              Checked="Subdir_Check" 
+                              Unchecked="Subdir_Check" 
+                              IsEnabled="False">
+                    </CheckBox>
+                    
+                    <Button Name="FilterSubdirBtn" 
+                            Content="Filter Subdirectories"
+                            Grid.Column="2" 
+                            Margin="10 10 10 0" 
+                            IsEnabled="False" 
+                            Click="FilterSubdir_Click">
+                    </Button>
+                    
+                </Grid>
+            </Grid>
+            
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                </Grid.RowDefinitions>
+                
+                <Label Name="DirLabel" 
+                       Content="Chosen Directory:" 
+                       Margin="5 0 0 0" 
+                       Foreground="White" 
+                       VerticalAlignment="Bottom">
+                </Label>
+
+                <TextBox Name="DirTextbox" 
+                         Grid.Row="1" 
+                         Margin="10" >
+                </TextBox>
+                
+            </Grid>
+        </Grid>
+        
+        <!-- Middle grid items(for selecting filetypes, profiles and running organisation-->
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button Name="FilterTypesBtn" 
+                                Content="Filter Filetypes" 
+                                Grid.Column="0" 
+                                Margin="10 5 10 5"   
+                                IsEnabled="False" 
+                                Click="FilterTypesBtn_Click">
+                        </Button>
+                        
+                        <Button Name="ChoosePresetBtn" 
+                                Content="Choose Preset" 
+                                Grid.Column="1" 
+                                Margin="10 5 10 5"   
+                                IsEnabled="False" 
+                                Click="ChoosePresetBtn_Click">
+                        </Button>
+
+                        <Button Name="OrganiseBtn" 
+                                Content="Organise" 
+                                Grid.Column="2" 
+                                Margin="10 5 10 5" 
+                                IsEnabled="False" Click="OrganiseBtn_Click">
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition Height="3*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Name="FilterLabel" 
+                           Content="" 
+                           Margin="5 0 0 0" 
+                           Foreground="White" 
+                           VerticalAlignment="Bottom">
+                    </Label>
+                    
+                    <ProgressBar Name="OrganisationProgress" 
+                                 Grid.Row="1" 
+                                 Margin="10">
+                    </ProgressBar>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" 
+              Width="0" 
+              HorizontalAlignment="Right">
+        </Grid>        
+        
+        <!-- Lower grid items(for background organising)-->
+        <Grid Grid.Row="2">
+            <Canvas Background="#D8F6D6"></Canvas>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Backround Organiser" 
+                       Grid.Column="0" 
+                       Grid.Row="0"  
+                       Margin="10 0 10 0"
+                       Foreground="#0C2738" 
+                       VerticalAlignment="Center">
+                </Label>
+
+                <Button Name="BGChooseFolderBtn"
+                        Content="Choose Folder" 
+                        Grid.Column="0" 
+                        Grid.Row="1" 
+                        Margin="10 5 10 5" Click="BGChooseFolderBtn_Click">
+                </Button>
+
+                <Button Name="BGRunStateBtn" 
+                        Content="Start" 
+                        Grid.Column="1" 
+                        Grid.Row="1" 
+                        Margin="10 5 10 5" 
+                        IsEnabled="False" Click="BGRunStateBtn_Click">
+                </Button>
+                
+                <StackPanel Grid.Column="2" 
+                            Grid.Row="1" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center" >
+                    <CheckBox  Name="StartupCheckBox" 
+                               Content="Load at startup"
+                               Foreground="#222929" 
+                               Checked="StartupCheckBox_Checked"
+                               Unchecked="StartupCheckBox_Checked">
+                        
+                    </CheckBox>
+                    <CheckBox Name="BGFilterSubDirsCheckBox"
+                              Content="Organise Subdirectories" 
+                              IsEnabled="False" 
+                              Foreground="#222929" Checked="BGFilterSubDirsCheckBox_Checked"></CheckBox>
+                </StackPanel>
+
+                <Label Name="BGDirectoryLabel" 
+                       Content="No directory chosen." 
+                       Grid.Column="0"
+                       Grid.ColumnSpan="3"
+                       Grid.Row="2" 
+                       Margin="10 0 10 0" 
+                       Foreground="#222929" 
+                       VerticalAlignment="Center">
+                </Label>
+                <ProgressBar Name="BGOrganisationProgress" 
+                         Grid.Column="0" 
+                         Grid.Row="3" 
+                         Grid.ColumnSpan="3" 
+                         Margin="10">
+                </ProgressBar>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
