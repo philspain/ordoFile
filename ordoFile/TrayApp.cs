@@ -8,78 +8,96 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using ordoFile.DataAccess;
-using ordoFile.Organisers;
+using ordoFile.Models.Organisers;
 
 namespace ordoFile
 {
-    partial class TrayApp : Form
+    public partial class TrayApp : Form
     {
+        // Icon for tray app
         NotifyIcon _trayIcon = new NotifyIcon();
+
+        //Menu for tray app
         ContextMenu _trayMenu = new ContextMenu();
+
+        // Menu items to be placed in context menu
         MenuItem _showGUI, _bgState, _exit;
-        BackgroundOrganiser _bgThread;
-        System.Windows.Controls.Button _bgChooseFolderBtn, _bgRunStateBtn;
-        System.Windows.Controls.CheckBox _bgSubDirCheckBox;
-        MainWindow _mainWindow;
-        System.Windows.Visibility _windowVisible = System.Windows.Visibility.Visible;
-        System.Windows.Visibility _windowHidden = System.Windows.Visibility.Hidden;
-        Configs _configs = Configs.GetConfigs();
-        bool _hideWindow;
-        Thread _updateBGStateThread;
 
-        public TrayApp(MainWindow mainWindow, BackgroundOrganiser bgThread, System.Windows.Controls.Button bgChooseFolderBtn,
-            System.Windows.Controls.Button bgRunStateBtn, System.Windows.Controls.CheckBox bgSubDirCheckBox, bool hideWindow)
+        // Reading and saving of config settings
+        Configs _configs;
+
+        // Ensures background/foreground organiser do not organise
+        // the same folder; also syncs view states between GUI and
+        // tray app
+        OrganisationSyncer _organisationSyncer;
+
+        // Represent states for whether or not the MainWindow should
+        // be hidden, and whether or not it close button should minimise
+        // window or exit application
+        bool _hideWindow,
+             _windowShouldMinimise;
+
+        public TrayApp(OrganisationSyncer organisationSyncer, Configs configs)
         {
-            InitializeComponent();
-
-            _mainWindow = mainWindow;
-            _bgThread = bgThread;
-            _bgChooseFolderBtn = bgChooseFolderBtn;
-            _bgRunStateBtn = bgRunStateBtn;
-            _hideWindow = hideWindow;
-            _bgSubDirCheckBox = bgSubDirCheckBox;
+            _organisationSyncer = organisationSyncer;
+            _configs = configs;
 
             OnInitialise();
+
+            InitializeComponent();
         }
 
-        public bool CanOrganise
+        /// <summary>
+        /// Returns wether or the window should be minimised
+        /// when MainWindow's close button is clicked
+        /// </summary>
+        public bool WindowShouldMinimise
         {
-            set { _bgState.Enabled = value; }
+            get { return _windowShouldMinimise; }
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
+            // Hide form window.
             this.Visible = false;
             this.ShowInTaskbar = false;
         }
 
         void OnInitialise()
         {
-            _mainWindow.ShouldMinimise = true;
+            // Pass the event used for changing the _bgState display text
+            // to organisation syncer, which will be raised on input
+            // in the GUI
+            _organisationSyncer.ChangeOrganisationTextInTray += ChangeOrganisationText;
+
+            // Set the application to minimise when close button
+            // of main window is clicked
+            _windowShouldMinimise = true;
+
+            // Set whether or not the GUI should be hidden on startup
+            _hideWindow = ((bool) System.Windows.Application.Current.Properties["bgStartup"]);
 
             if (_hideWindow)
             {
-                _mainWindow.Visibility = _windowHidden;                
-            }
-            else
-            {
-                _mainWindow.Visibility = _windowVisible;
+                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Hidden;
+                _organisationSyncer.UpdateVisibility();
             }
 
+            // Instantiate tray menu, and menu items to be added to it
             _showGUI = new MenuItem();
-            _showGUI.Text = (_mainWindow.Visibility == _windowVisible) ? "Hide window" : "Show window";
-            _showGUI.Click += (a, b) => { ShowGUI(); };
+            _showGUI.Text = (_hideWindow) ? "Show Window" : "Hide Window";
+            _showGUI.Click += (a, e) => { ChangeGUIVisibility(); };
 
             _bgState = new MenuItem();
-            _bgState.Text = (_bgThread.IsWorking == true) ? "Stop organising" : "Start organising";
+            _bgState.Text = (_organisationSyncer.BackgroundOrganiserRunning) ? "Stop Organising" : "Start Organising";
             _bgState.Enabled = _configs.BGDirectoryExists;
-            _bgState.Click += new EventHandler(BGProcessState);
+            _bgState.Click += (a, e) => { CheckOrganisationState(); };
 
             _exit = new MenuItem();
             _exit.Text = "Exit";
-            _exit.Click += new EventHandler(OnExit);
+            _exit.Click += (a, e) => { OnExit(); };
 
             _trayMenu.MenuItems.Add(0, _showGUI);
             _trayMenu.MenuItems.Add(1, _bgState);
@@ -87,86 +105,80 @@ namespace ordoFile
 
             _trayIcon.Icon = new Icon("icon.ico", 38, 42);
             _trayIcon.Text = "ordoFile";
-            _trayIcon.DoubleClick += (a, b) => { ShowGUI(); };
+            _trayIcon.DoubleClick += (a, b) => { ChangeGUIVisibility(); };
             _trayIcon.ContextMenu = _trayMenu;
             _trayIcon.Visible = true;
         }
 
-        public void ShowGUI()
+        /// <summary>
+        /// Method which sets visibility of GUI and tray menu text
+        /// </summary>
+        public void ChangeGUIVisibility()
         {
-            if (_mainWindow.Visibility == _windowVisible)
+            if (_organisationSyncer.WindowVisibilty == System.Windows.Visibility.Visible)
             {
                 _showGUI.Text = "Show window";
-                _mainWindow.Visibility = _windowHidden;
+                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Hidden;
+                _organisationSyncer.UpdateVisibility();
             }
             else
             {
                 _showGUI.Text = "Hide window";
-                _mainWindow.Visibility = _windowVisible;
+                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Visible;
+                _organisationSyncer.UpdateVisibility();
             }
         }
 
-        void UpdateBGStateCallback()
+        /// <summary>
+        /// Check organisation current organisation state, start or 
+        /// stop organisation depending on whether or not background
+        /// directory exists then update menu item with appropriate text
+        /// </summary>
+        void CheckOrganisationState()
         {
-            while (_bgThread.IsWorking)
+            if (!_organisationSyncer.BackgroundOrganiserRunning)
             {
-                _bgRunStateBtn.Dispatcher.Invoke((Action) (() => {_bgRunStateBtn.Content = _bgState.Text = "Stopping...";}));
-            }
-
-            _bgSubDirCheckBox.Dispatcher.Invoke((Action)(() => { _bgSubDirCheckBox.IsEnabled = _configs.BGDirectoryExists; }));
-            _bgChooseFolderBtn.Dispatcher.Invoke((Action)(() => { _bgChooseFolderBtn.IsEnabled = true; }));
-            _bgState.Enabled = _configs.BGDirectoryExists;
-            _bgRunStateBtn.Dispatcher.Invoke((Action)(() => { _bgRunStateBtn.IsEnabled = _configs.BGDirectoryExists; }));
-            _bgState.Text = "Start Organising";
-            _bgRunStateBtn.Dispatcher.Invoke((Action) (() => {_bgRunStateBtn.Content = "Start";}));
-        }
-
-        public void UpdateBGState()
-        {
-            if (_bgThread.IsWorking || _bgThread.IsSleeping)
-            {
-                System.Diagnostics.Debug.WriteLine("here");
-                if (_updateBGStateThread == null ||
-                    _updateBGStateThread.ThreadState != ThreadState.Running)
+                if (_configs.BGDirectoryExists)
                 {
-                    _updateBGStateThread = new Thread(UpdateBGStateCallback);
-                }
-
-                if (!(_updateBGStateThread.ThreadState == ThreadState.Running))
-                {
-                    _bgThread.Stop();
-                    _bgState.Enabled = false;
-                    _bgRunStateBtn.Dispatcher.Invoke((Action)(() => { _bgRunStateBtn.IsEnabled = false; }));
-                    _bgChooseFolderBtn.Dispatcher.Invoke((Action)(() => { _bgChooseFolderBtn.IsEnabled = false; }));
-                    _bgSubDirCheckBox.Dispatcher.Invoke((Action)(() => { _bgSubDirCheckBox.IsEnabled = false; }));
-                    _updateBGStateThread.Start();
+                    _bgState.Text = "Stop Organising";
+                    _organisationSyncer.ShouldOrganiseInBackground(true);
                 }
             }
             else
             {
-                _bgState.Text = "Stop Organising";
-                _bgRunStateBtn.Dispatcher.Invoke((Action)(() => { _bgRunStateBtn.Content = "Stop"; }));
-                _bgChooseFolderBtn.Dispatcher.Invoke((Action)(() => { _bgChooseFolderBtn.IsEnabled = false; }));
-                _bgThread.Start();
+                _bgState.Text = "Start Organising";
+                _organisationSyncer.ShouldOrganiseInBackground(false);
             }
         }
 
-        void BGProcessState(object sender, EventArgs e)
+        /// <summary>
+        /// Event to update organisation state text in context menu
+        /// depending on current organisation state.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void ChangeOrganisationText(object sender, EventArgs e)
         {
-            UpdateBGState();
+            if (_organisationSyncer.BackgroundOrganiserRunning)
+            {
+                _bgState.Text = "Stop Organising";
+            }
+            else
+            {
+                _bgState.Text = "Start Organising";
+            }
         }
 
-        void StopBGProcess(object sender, EventArgs e)
+        /// <summary>
+        /// Checks to run on exit of application.
+        /// </summary>
+        void OnExit()
         {
-            _bgThread.Stop();
-        }
-
-        void OnExit(object sender, EventArgs e)
-        {
-            _mainWindow.ShouldMinimise = false;
-            _mainWindow.Close();
+            _organisationSyncer.ShouldOrganiseInBackground(false);
+            _configs.SaveConfigs();
+            _windowShouldMinimise = false;
+            System.Windows.Application.Current.Shutdown();
             this.Close();
-            Application.Exit();
         }
 
         protected override void Dispose(bool isDisposing)

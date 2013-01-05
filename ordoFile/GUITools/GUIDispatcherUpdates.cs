@@ -7,12 +7,13 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
+using ordoFile.Models;
 
 namespace ordoFile.GUITools
 {
     static class GUIDispatcherUpdates
     {
-        public static Dispatcher GUIDispatcher;
+        public static Dispatcher GUIDispatcher = Application.Current.Dispatcher;
 
         public static void UpdateZIndex(UIElement uiElement, int zIndex)
         {
@@ -24,9 +25,39 @@ namespace ordoFile.GUITools
             GUIDispatcher.BeginInvoke((Action)(() => { imageElement.Source = gif.Frames[frameIndex]; }));
         }
 
-        public static void AddTypeToObservableCollection(ObservableCollection<string> typesCollection, string fileType)
+        public static void AddItemsToCollection(ObservableCollection<string> collection, IEnumerable<string> items)
         {
-            GUIDispatcher.Invoke((Action)(() => { typesCollection.Add(fileType); }));
+            if (collection != null)
+                if (items != null)
+                    foreach (string item in items)
+                    {
+                        GUIDispatcher.Invoke((Action)(() => { collection.Add(item); }));
+                    }
+
+        }
+
+        public static void AddItemToCollection(ObservableCollection<string> collection, string item)
+        {
+            if (collection != null)
+                GUIDispatcher.Invoke((Action)(() => { collection.Add(item); }));
+        }
+
+        public static void AddItemToCollection(ObservableCollection<DirectoryModel> collection, DirectoryModel item)
+        {
+            if (collection != null)
+                GUIDispatcher.Invoke((Action)(() => { collection.Add(item); }));
+        }
+
+        public static void ClearObservableCollection(ObservableCollection<string> collection)
+        {
+            if (collection != null)
+                GUIDispatcher.Invoke((Action)(() => { collection.Clear(); }));
+        }
+
+        public static void ClearObservableCollection(ObservableCollection<DirectoryModel> collection)
+        {
+            if (collection != null)
+                GUIDispatcher.Invoke((Action)(() => { collection.Clear(); }));
         }
     }
 }

@@ -6,22 +6,32 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
+using ordoFile.GUITools;
 
 namespace ordoFile.Models
 {
     public class DirectoryModel : INotifyPropertyChanged
     {
-        bool _isChecked;
-        CheckBox _subdirCheckbox;
+        bool _isChecked, _checkSubdirectories;
+        string _name;
+        ObservableCollection<DirectoryModel> _subdirectories;
 
-        public DirectoryModel(CheckBox subdirCheckbox)
+        public DirectoryModel()
         {
             _isChecked = true;
-            _subdirCheckbox = subdirCheckbox;
             Subdirectories = new ObservableCollection<DirectoryModel>();
         }
 
-        public string Name { get; set; }
+        public string Name 
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                NotifyPropertyChanged("Name");
+            }
+        }
+
         public string Path { get; set; }
 
         public bool IsChecked
@@ -33,31 +43,59 @@ namespace ordoFile.Models
                 this._isChecked = value;
                 NotifyPropertyChanged("IsChecked");
 
-                if ((bool)_subdirCheckbox.IsChecked)
+                if (CheckSubdirectories)
                 {
-                    RecursivelySetFolderCheckStates(this.Subdirectories, value);
+                    RecursivelySetCheckStates(value);
                 }
             }
         }
 
-        public ObservableCollection<DirectoryModel> Subdirectories { get; set; }
+        public bool CheckSubdirectories
+        {
+            get { return _checkSubdirectories; }
+            set
+            {
+                this._checkSubdirectories = value;
+                RecursivelySetCheckDirectories();
+            }
+        }
+
+        public ObservableCollection<DirectoryModel> Subdirectories 
+        {
+            get { return _subdirectories; }
+            set
+            {
+                _subdirectories = value;
+            }
+        }
 
         public DirectoryModel CreateAndAddSubdirectory(string path)
         {
-            DirectoryModel subdirectory = new DirectoryModel(this._subdirCheckbox);
+            DirectoryModel subdirectory = new DirectoryModel();
             subdirectory.Path = path;
-            Subdirectories.Add(subdirectory);
+            GUIDispatcherUpdates.AddItemToCollection(Subdirectories, subdirectory);
 
             return subdirectory;
         }
 
-        void RecursivelySetFolderCheckStates(ObservableCollection<DirectoryModel> directories, bool checkState)
+        void RecursivelySetCheckStates(bool checkState)
         {
-            if (directories.Count > 0)
+            if (Subdirectories.Count > 0)
             {
                 foreach (DirectoryModel subfolder in Subdirectories)
                 {
                     subfolder.IsChecked = checkState;
+                }
+            }
+        }
+
+        void RecursivelySetCheckDirectories()
+        {
+            if (Subdirectories.Count > 0)
+            {
+                foreach (DirectoryModel subdirectory in Subdirectories)
+                {
+                    subdirectory.CheckSubdirectories = CheckSubdirectories;
                 }
             }
         }
