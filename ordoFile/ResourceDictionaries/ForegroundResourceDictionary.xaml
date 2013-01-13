@@ -44,7 +44,14 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="150" />
         <Setter Property="Height" Value="170" />
-        <Setter Property="Visibility" Value="{Binding WaitImageVisibility}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding WaitImageVisibility}" Value="Hidden">
+                <Setter Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding WaitImageVisibility}" Value="Visible">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- style for label to indicate why whether loading directories

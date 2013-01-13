@@ -24,7 +24,7 @@ namespace ordoFile
         string _backgroundDirectory,
                _foregroundDirectory;
 
-        System.Windows.Visibility _windowVisibility = System.Windows.Visibility.Hidden;
+        bool _windowVisible = true;
 
         /// <summary>
         /// Get or set the background directory path.
@@ -65,10 +65,10 @@ namespace ordoFile
         /// <summary>
         /// Get or set the state of the foreground organiser
         /// </summary>
-        public System.Windows.Visibility WindowVisibilty
+        public bool WindowVisible
         {
-            get { return _windowVisibility; }
-            set { _windowVisibility = value; }
+            get { return _windowVisible; }
+            set { _windowVisible = value; }
         }
 
         /// <summary>

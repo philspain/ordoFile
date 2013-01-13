@@ -13,7 +13,7 @@ namespace ordoFile.ViewModels
 
         OrganisationSyncer _organisationSyncer;
 
-        Visibility _windowVisibility;
+        bool _windowVisible;
 
         public MainViewModel(TrayApp trayApp, OrganisationSyncer organisationSyncer)
         {
@@ -22,25 +22,26 @@ namespace ordoFile.ViewModels
             OnInitialise();
         }
 
-        public Visibility WindowVisibility
+        public bool WindowVisible
         {
-            get { return _windowVisibility; }
+            get { return _windowVisible; }
             set
             {
-                _windowVisibility = value;
-                OnPropertyChanged("WindowVisibility");
+                _windowVisible = value;
+                System.Diagnostics.Debug.WriteLine("MainView set: " + _windowVisible);
+                OnPropertyChanged("WindowVisible");
             }
         }
 
         void OnInitialise()
         {
-            WindowVisibility = _organisationSyncer.WindowVisibilty;
+            WindowVisible = _organisationSyncer.WindowVisible;
             _organisationSyncer.UpdateWindowVisibility += CheckVisibilityStatus;
         }
 
         void CheckVisibilityStatus(object sender, EventArgs e)
         {
-            WindowVisibility = _organisationSyncer.WindowVisibilty;
+            WindowVisible = _organisationSyncer.WindowVisible;
         }
     }
 }

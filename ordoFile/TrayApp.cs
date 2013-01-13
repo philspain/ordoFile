@@ -81,13 +81,13 @@ namespace ordoFile
 
             if (_hideWindow)
             {
-                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Hidden;
+                _organisationSyncer.WindowVisible = false;
                 _organisationSyncer.UpdateVisibility();
             }
 
             // Instantiate tray menu, and menu items to be added to it
             _showGUI = new MenuItem();
-            _showGUI.Text = (_hideWindow) ? "Show Window" : "Hide Window";
+            _showGUI.Text = (!_organisationSyncer.WindowVisible) ? "Show Window" : "Hide Window";
             _showGUI.Click += (a, e) => { ChangeGUIVisibility(); };
 
             _bgState = new MenuItem();
@@ -115,16 +115,16 @@ namespace ordoFile
         /// </summary>
         public void ChangeGUIVisibility()
         {
-            if (_organisationSyncer.WindowVisibilty == System.Windows.Visibility.Visible)
+            if (_organisationSyncer.WindowVisible)
             {
                 _showGUI.Text = "Show window";
-                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Hidden;
+                _organisationSyncer.WindowVisible = false;
                 _organisationSyncer.UpdateVisibility();
             }
             else
             {
                 _showGUI.Text = "Hide window";
-                _organisationSyncer.WindowVisibilty = System.Windows.Visibility.Visible;
+                _organisationSyncer.WindowVisible = true;
                 _organisationSyncer.UpdateVisibility();
             }
         }

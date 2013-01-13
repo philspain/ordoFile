@@ -3,24 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:ordoFile.ViewModels"
         xmlns:vw="clr-namespace:ordoFile.Views"
+        xmlns:conv="clr-namespace:ordoFile.Converters"
         Title="ordoFile" 
         Name="MainWindow"
         Height="500" 
         Width="815">
     
     <Window.Resources>
-        <ResourceDictionary Source="/ResourceDictionaries/MainViewResourceDictionary.xaml" />
+        <conv:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"/>
     </Window.Resources>
     
+    <Window.Style>
+        <Style TargetType="Window">
+            <Setter Property="Visibility" 
+                        Value="{Binding WindowVisible, 
+                                Converter={StaticResource BoolVisibilityConverter}, Mode=TwoWay}" />
+        </Style>
+    </Window.Style>
+
     <Grid Name="ContentGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <vw:ForegroundOrganiserView Grid.RowSpan="2"/>
 
-        <vw:BackgroundOrganiserView Grid.Row="2"/>
+        <vw:ForegroundOrganiserView />
+
+        <vw:BackgroundOrganiserView Grid.Row="1" />
     </Grid>
 </Window>

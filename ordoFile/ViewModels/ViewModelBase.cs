@@ -13,7 +13,7 @@ namespace ordoFile.ViewModels
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -21,9 +21,9 @@ namespace ordoFile.ViewModels
 
             if (handler != null)
             {
+                System.Diagnostics.Debug.WriteLine("Handler Not Null: " + propertyName);
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
     }
 }
