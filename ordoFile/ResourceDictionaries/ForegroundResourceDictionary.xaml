@@ -1,0 +1,465 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:obj="clr-namespace:ordoFile.Models">
+    
+    <!--Style for top grid(foreground organiser) background gradient-->
+    <Style x:Key="TopGridGradient" TargetType="Grid">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#59604E" Offset="0" />
+                    <GradientStop Color="#0C2738" Offset="0.205" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- style for the grid used to display loading information to users -->
+    <Style x:Key="WaitGridStyle" TargetType="Grid">
+        <Setter Property="Panel.ZIndex" Value="-10" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding WaitGridZIndex}" Value="Hidden">
+                <Setter Property="Panel.ZIndex" Value="-10" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding WaitGridZIndex}" Value="Visible">
+                <Setter Property="Panel.ZIndex" Value="10" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for setting opacity of the waiting grid -->
+    <Style x:Key="OpacityGridStyle" TargetType="Grid">
+        <Setter Property="Panel.ZIndex" Value="0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Gray" Opacity="0.5" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- style for setting ZIndex of the grid that contains the image and text
+        displayed when the waiting grid is displayed-->
+    <Style x:Key="WaitImageContainerStyle" TargetType="Grid">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Width" Value="150" />
+        <Setter Property="Height" Value="170" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding WaitImageVisibility}" Value="Hidden">
+                <Setter Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding WaitImageVisibility}" Value="Visible">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for label to indicate why whether loading directories
+         or organising files -->
+    <Style x:Key="WaitLabelStyle" TargetType="Label">
+        <Setter Property="Content" Value="{Binding WaitGridText}" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <!-- style for image that is shown when loading directories
+         or organising files -->
+    <Style x:Key="WaitImageStyle" TargetType="Image">
+        <Setter Property="Width" Value="150" />
+        <Setter Property="Height" Value="150" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- style for the grid that contains the grids used in various filtering options-->
+    <Style x:Key="SidebarStyle" TargetType="Grid">
+        <Setter Property="Grid.RowSpan" Value="3" />
+        <Setter Property="Panel.ZIndex" Value="-100" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SidebarZIndex}" Value="Hidden">
+                <Setter Property="Panel.ZIndex" Value="-100" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SidebarZIndex}" Value="Visible">
+                <Setter Property="Panel.ZIndex" Value="100" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for the grid used to filter which subdirectories to organise -->
+    <Style x:Key="FilterDirsStyle" TargetType="Grid">
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Background" Value="Silver" />
+        <Setter Property="Panel.ZIndex" Value="1" />
+    </Style>
+
+    <!-- style for the grid used to filter which subdirectories to organise -->
+    <Style x:Key="DirectoryTreeStyle" TargetType="TreeView">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Grid.Row" Value="1" />
+        <Setter Property="ItemsSource" Value="{Binding RootDirectory}" />
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" 
+                            Value="False" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <HierarchicalDataTemplate DataType="{x:Type obj:DirectoryModel}" 
+                                          ItemsSource="{Binding Path=Subdirectories, Mode=TwoWay}">
+
+                    <CheckBox Style="{DynamicResource DirectoryTreeCheckBox}" />
+
+                </HierarchicalDataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DirectoryTreeCheckBox" TargetType="CheckBox">
+        <Setter Property="Content" Value="{Binding Path=Name, Mode=TwoWay}" />
+        <Setter Property="IsChecked" Value="{Binding Path=IsChecked, Mode=TwoWay}" />
+        <Setter Property="Margin" Value="2" />
+    </Style>
+
+    <!-- style for the checkbox that controls whether or not checking affects
+        subdirectory checkboxes-->
+    <Style x:Key="CheckSubdirectoryCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="Margin" Value="0 2 0 2" />
+        <Setter Property="Content" Value="Check affects subdirectories" />
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsChecked" Value="{Binding CheckSubdirectories}" />
+    </Style>
+
+    <!-- style for the button used to close the window used for filtering
+        which directories/subdirectories are to be organised -->
+    <Style x:Key="ExitFilterDirsBtnStyle" TargetType="Button">
+        <Setter Property="Margin" Value="10"  />
+        <Setter Property="Content" Value="Done" />
+        <Setter Property="Command" Value="{Binding FilterDirectoriesDoneCommand}" />
+    </Style>
+
+    <!-- style for the grid that allows user to filter types to organise -->
+    <Style x:Key="FilterTypesStyle" TargetType="Grid">
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Panel.ZIndex" Value="-2" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding FilterTypesZIndex}" Value="Hidden">
+                <Setter Property="Panel.ZIndex" Value="-2" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding FilterTypesZIndex}" Value="Visible">
+                <Setter Property="Panel.ZIndex" Value="2" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for the grid that allows user to save a preset filter -->
+    <Style x:Key="SavePresetFilterStyle" TargetType="Grid">
+        <Setter Property="Grid.Row" Value="0" />
+        <Setter Property="Background" Value="Silver" />
+        <Setter Property="Panel.ZIndex" Value="-2" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SavePresetZIndex}" Value="Hidden">
+                <Setter Property="Panel.ZIndex" Value="-2" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SavePresetZIndex}" Value="Visible">
+                <Setter Property="Panel.ZIndex" Value="2" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for the grid that allows user to save a preset filter -->
+    <Style x:Key="SelectPresetStyle" TargetType="Grid">
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Panel.ZIndex" Value="-3" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectPresetZIndex}" Value="Hidden">
+                <Setter Property="Panel.ZIndex" Value="-3" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SelectPresetZIndex}" Value="Visible">
+                <Setter Property="Panel.ZIndex" Value="3" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- style for the button to hide the grid used for selecting file types
+        to organise-->
+    <Style x:Key="ExitTypeGridBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Done" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Command" Value="{Binding FilterTypesDoneCommand}" />
+
+    </Style>
+
+    <!-- style for button used to show grid for saving selected files
+        as a preset filter-->
+    <Style x:Key="SaveAsPresetBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Save as preset" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Command" Value="{Binding ShowSavePanelCommand}" />
+    </Style>
+
+    <!-- style for textbox used for setting name of preset to be saved -->
+    <Style x:Key="PresetTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Margin" Value="5 0 0 0" />
+        <Setter Property="Text" Value="{Binding SavePresetText, Mode=TwoWay}" />
+    </Style>
+
+    <!-- style for button used to save selected filtypes as a preset filter -->
+    <Style x:Key="SavePresetBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Save" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Command" Value="{Binding SavePresetCommand}" />
+    </Style>
+
+    <!-- style for button used to hide grid for saving selected filetypes as preset -->
+    <Style x:Key="CancelSavingBtnStyle" TargetType="Button">
+        <Setter Property="Grid.Column" Value="2" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Content" Value="Done" />
+        <Setter Property="Command" Value="{Binding HideSavePanelCommand}" />
+    </Style>
+                                      
+    <!-- style for itemscontrol used to contain filetypes available to be organised -->
+    <Style x:Key="TypesControlStyle" TargetType="ItemsControl">
+        <Setter Property="Grid.Row" Value="1" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="ItemsSource" Value="{Binding Filetypes}" />
+        <Setter Property="ItemsControl.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <WrapPanel  FlowDirection="LeftToRight" 
+                                IsItemsHost="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsControl.ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <CheckBox Width="75"
+                              Height="20"
+                              IsChecked="True"
+                              Command="{Binding DataContext.TypeCheckCommand, ElementName=TypesControl}"
+                              CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                              Content="{Binding}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- style for button used to load selected preset filter -->
+    <Style x:Key="SelectPresetBtnStyle" TargetType="Button">
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Content" Value="Select and exit" />
+        <Setter Property="Command" Value="{Binding SelectPresetCommand}" />
+    </Style>
+
+    <!-- style for button used to hide grid for selecting a preset to load -->
+    <Style x:Key="ExitPresetBtnStyle" TargetType="Button">
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Content" Value="Exit" />
+        <Setter Property="Command" Value="{Binding ExitSelectPresetCommand}" />
+    </Style>
+                                 
+    <!-- style for list that contains the names of all preset filters -->
+    <Style x:Key="PresetListBoxStyle" TargetType="ListBox">
+        <Setter Property="Grid.Row" Value="1" />
+        <Setter Property="ItemsSource" Value="{Binding PresetNames}" />
+        <Setter Property="SelectedItem" Value="{Binding SelectedPreset}" />
+    </Style> 
+                                         
+    <!-- style for button used to hide grid for selecting a preset to load -->
+    <Style x:Key="EditPresetNameTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Grid.Row" Value="0" />
+        <Setter Property="Margin" Value="5 0 5 0" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Text" Value="{Binding TempPresetName}" />
+    </Style>
+
+    <!-- style for scrollviewer that contains the filetypes save in 
+        the currently selected preset filter-->
+    <Style x:Key="EditPresetTypesScrollStyle" TargetType="ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <ItemsControl Name="EditPresetTypesPanel"
+                              ItemsSource="{Binding SelectedPresetTypes}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <WrapPanel FlowDirection="LeftToRight" 
+                                       IsItemsHost="True" />
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding}"
+                                      Height="20"
+                                      Width="75"
+                                      IsChecked="True" 
+                                      Command="{Binding DataContext.PresetTypeCheckCommand, ElementName=EditPresetTypesPanel}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- style for button that is used to save changes made to currently
+        selected preset filter-->
+    <Style x:Key="SavePresetEditsBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Save Changes" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Command" Value="{Binding SavePresetEditsCommand}" />
+    </Style>
+                                         
+    <!-- style for textbox that is used to set name of new type to be added
+         to the currently selected preset filter-->
+    <Style x:Key="AddTypeTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Grid.Row" Value="2" />
+        <Setter Property="Margin" Value="5 0 5 0" />
+        <Setter Property="Text" Value="{Binding AddTypeText}" />
+    </Style>
+                                        
+    <!-- style for button to add type to currently selected preset filter -->
+    <Style x:Key="AddTypeButtonStyle" TargetType="Button">
+        <Setter Property="Content" Value="Add Filetype" />
+        <Setter Property="Grid.Row" Value="3" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Command" Value="{Binding AddTypeCommand}" />
+    </Style>
+
+    <!-- style for button to choose folder to be organised -->
+    <Style x:Key="ChooseFolderBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Choose Folder" />
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="Margin" Value="10 10 10 0" />
+        <Setter Property="Command" Value="{Binding SelectDirectoryCommand}" />
+    </Style>
+    
+    <!-- style for checkbox which decided whether or not the subdirectories of selected
+     folder will be organised -->
+    <Style x:Key="SubdirCheckboxStyle" TargetType="CheckBox">
+        <Setter Property="Content" Value="Include Subdirectories"/>
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Margin" Value="554 0 0 0" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsEnabled" Value="{Binding SubdirCheckboxEnabled}" />
+        <Setter Property="IsChecked" Value="{Binding SubdirCheckboxChecked}"/>
+    </Style>
+                            
+    <!-- style for button to show grid for filtering out which available subdirectories
+        are to be organised-->
+    <Style x:Key="FilterSubdirBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Filter Subdirectories"/>
+        <Setter Property="Grid.Column" Value="2" />
+        <Setter Property="Margin" Value="10 10 10 0" />
+        <Setter Property="IsEnabled" Value="{Binding FilterSubdirBtnEnabled}" />
+        <Setter Property="Command" Value="{Binding FilterDirectoriesCommand}"/>
+    </Style>
+
+
+    <!-- style for label that displays the filter that is currently set -->
+    <Style x:Key="DirectoryLabelStyle" TargetType="Label">
+        <Setter Property="Content"  Value="Chosen Directory:" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Margin" Value="10 0 0 0" />
+        <Setter Property="VerticalAlignment" Value="Bottom"  />
+    </Style>
+    
+    <!-- style for button to show grid for filtering out which available subdirectories
+        are to be organised-->
+    <Style x:Key="DirTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Text" Value="{Binding DirTextboxText}"/>
+        <Setter Property="Margin" Value="10 0 0 0" />
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Grid.Row" Value="0" />
+    </Style>
+
+    <!-- style for button to show grid for filtering out which available subdirectories
+        are to be organised -->
+    <Style x:Key="DirPathLabelStyle" TargetType="Label">
+        <Setter Property="Content" Value="{Binding DirTextboxText}"/>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Grid.Row" Value="1" />
+    </Style>
+
+    <!-- style for button to show grid for choosing which filetypes are to be organised -->
+    <Style x:Key="FilterTypesBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Filter Filetypes" />
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="Margin" Value="10 5 10 5" />
+        <Setter Property="IsEnabled" Value="{Binding FilterTypesBtnEnabled}"  />
+        <Setter Property="Command" Value="{Binding FilterTypesCommand}"/>
+    </Style>
+
+    <!-- style for button to show grid for selected an existing preset filetype filter-->
+    <Style x:Key="ChoosePresetBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Choose preset" />
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="Margin" Value="10 5 10 5" />
+        <Setter Property="IsEnabled" Value="{Binding ChoosePresetBtnEnabled}"  />
+        <Setter Property="Command" Value="{Binding ShowPresetPanelCommand}" />
+    </Style>
+    
+    <!-- style for button that starts the organisation process -->
+    <Style x:Key="OrganiseBtnStyle" TargetType="Button">
+        <Setter Property="Content" Value="Organise" />
+        <Setter Property="Grid.Column" Value="2" />
+        <Setter Property="Margin" Value="10 5 10 5" />
+        <Setter Property="IsEnabled" Value="{Binding OrganiseBtnEnabled}"  />
+        <Setter Property="Command" Value="{Binding OrganiseCommand}" />
+    </Style>
+
+    <!-- style for label that displays the filter that is currently set -->
+    <Style x:Key="FilterLabelStyle" TargetType="Label">
+        <Setter Property="Content" Value="{Binding FilterLabelText}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Margin" Value="5 0 0 0" />
+        <Setter Property="VerticalAlignment" Value="Bottom"  />
+    </Style>
+    
+    <!-- style for label that displays the filter that is currently set -->
+    <Style x:Key="OrganisationProgressStyle" TargetType="ProgressBar">
+        <Setter Property="Grid.Row" Value="1" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <!-- Border Styles -->
+    <Style x:Key="FilterDirsBorder" TargetType="Border">
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="BorderBrush" Value="DarkGray" />
+        <Setter Property="BorderThickness" Value="2 0 0 0" />
+    </Style>
+
+    <Style x:Key="FileTypeBorder" TargetType="Border">
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="BorderBrush" Value="Silver" />
+        <Setter Property="BorderThickness" Value="2 0 0 0" />
+    </Style>
+
+    <Style x:Key="ChoosePresetBorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="Silver" />
+        <Setter Property="BorderThickness" Value="2 0 0 0"  />
+    </Style>
+
+    <Style x:Key="EditPresetTypesBorderStyle" TargetType="Border">
+        <Setter Property="Margin" Value="5 0 5 5" />
+        <Setter Property="BorderBrush" Value="Silver" />
+        <Setter Property="BorderThickness" Value="1"  />
+    </Style>
+</ResourceDictionary>
