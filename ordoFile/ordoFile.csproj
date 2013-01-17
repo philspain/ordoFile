@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{37DE0E5A-0701-461C-AF49-FAD8D1435274}</ProjectGuid>
+    <ProjectGuid>{2739B808-16F3-4A2A-AB26-7B01E77B14F8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ordoFile</RootNamespace>
@@ -121,7 +121,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\DelegateCommand.cs" />
-    <Compile Include="Converters\BoolToVisbilityConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullVisbilityConverter.cs" />
     <Compile Include="DataAccess\Logger.cs" />
     <Compile Include="DependencyFactory.cs" />
