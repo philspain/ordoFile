@@ -15,15 +15,12 @@ namespace ordoFile.Converters
             if (value == null)
                 return DependencyProperty.UnsetValue;
 
-            return ((bool) value) ? Visibility.Visible : Visibility.Hidden;
+            return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return false;
-
-            return (((Visibility) value) == Visibility.Visible) ? true : false;
+            throw new NotImplementedException();
         }
     }
 }

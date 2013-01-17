@@ -21,7 +21,6 @@ namespace ordoFile.ViewModels
 
             if (handler != null)
             {
-                System.Diagnostics.Debug.WriteLine("Handler Not Null: " + propertyName);
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }

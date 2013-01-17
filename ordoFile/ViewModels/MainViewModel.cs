@@ -9,39 +9,38 @@ namespace ordoFile.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        TrayApp _trayApp;
+        Visibility _windowVisible;
+        string _windowOpacity;
 
-        OrganisationSyncer _organisationSyncer;
-
-        bool _windowVisible;
-
-        public MainViewModel(TrayApp trayApp, OrganisationSyncer organisationSyncer)
+        public MainViewModel()
         {
-            _trayApp = trayApp;
-            _organisationSyncer = organisationSyncer;
             OnInitialise();
         }
 
-        public bool WindowVisible
+        public Visibility WindowVisible
         {
             get { return _windowVisible; }
             set
             {
                 _windowVisible = value;
-                System.Diagnostics.Debug.WriteLine("MainView set: " + _windowVisible);
                 OnPropertyChanged("WindowVisible");
+            }
+        }
+
+        public string WindowOpacity
+        {
+            get { return _windowOpacity; }
+            set
+            {
+                _windowOpacity = value;
+                OnPropertyChanged("WindowOpacity");
             }
         }
 
         void OnInitialise()
         {
-            WindowVisible = _organisationSyncer.WindowVisible;
-            _organisationSyncer.UpdateWindowVisibility += CheckVisibilityStatus;
-        }
-
-        void CheckVisibilityStatus(object sender, EventArgs e)
-        {
-            WindowVisible = _organisationSyncer.WindowVisible;
+            WindowVisible = Visibility.Visible;
+            WindowOpacity = "0.5";
         }
     }
 }
