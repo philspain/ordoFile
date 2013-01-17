@@ -346,6 +346,7 @@
         <Setter Property="Content" Value="Choose Folder" />
         <Setter Property="Grid.Column" Value="0" />
         <Setter Property="Margin" Value="10 10 10 0" />
+        <Setter Property="IsDefault" Value="True" />
         <Setter Property="Command" Value="{Binding SelectDirectoryCommand}" />
     </Style>
     
