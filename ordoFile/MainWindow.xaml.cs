@@ -38,5 +38,28 @@ namespace ordoFile
 
             this.DataContext = mainViewModel;
 		}
+
+        public void ClickToMove(object sender, RoutedEventArgs reArgs)
+        {
+            Window.DragMove();
+        }
+
+        public void ClickToExit(object sender, RoutedEventArgs reArgs)
+        {
+            Window.Close();
+        }
+
+        public void ClickToMinimise(object sender, RoutedEventArgs reArgs)
+        {
+            Window.WindowState = WindowState.Minimized;
+        }
+
+        public void ClickToMaximise(object sender, RoutedEventArgs reArgs)
+        {
+            if(Window.WindowState != WindowState.Maximized)
+                Window.WindowState = WindowState.Maximized;
+            else
+                Window.WindowState = WindowState.Normal;
+        }
 	}
 }

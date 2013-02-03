@@ -7,10 +7,22 @@
 	x:Name="Window" 
 	Title="MainWindow"
 	MinWidth="715" MinHeight="448"
-	Width="715" Height="448" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" WindowStyle="None">
+	Width="715" Height="478" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" WindowStyle="None">
 
 	<Grid x:Name="LayoutRoot" 
 		  Background="#E9E9E9">
-		<local:MainView />		
+        <DockPanel LastChildFill="True">
+            <Grid Height="30"
+                  DockPanel.Dock="Top"
+                  Background="#3299BB"
+                  MouseDown="ClickToMove">
+                <UniformGrid Columns="3" Rows="1" Width="84">
+                    <Button Click="ClickToMinimise"></Button>
+                    <Button Click="ClickToMaximise"></Button>
+                    <Button Click="ClickToExit"></Button>
+                </UniformGrid>
+            </Grid>
+            <local:MainView />
+        </DockPanel>
 	</Grid>
 </Window>
