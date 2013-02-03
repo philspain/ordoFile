@@ -1,0 +1,346 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mod="clr-namespace:ordoFile.Models"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+	mc:Ignorable="d"
+	x:Class="ordoFile.Views.ForegroundView"
+	x:Name="UserControl">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid Name="WaitGrid"
+              Style="{StaticResource WaitGridStyle}">
+
+            <Grid Name="OpacityGrid"
+                  Style="{StaticResource OpacityGridStyle}">
+
+                <Grid Name="WaitImageContainerGrid" 
+                      Style="{StaticResource WaitImageContainerStyle}">
+
+                    <Label Name="WaitLabel"
+                           Content="{Binding WaitGridText}"
+                           Height="25"
+                           HorizontalContentAlignment="Center"
+                           VerticalAlignment="Top"
+                           Foreground="White"/>
+
+                    <Image x:Name="LoadingImage"
+                           Height="150"
+                           Width="150"
+                           Margin="0 20 0 0">
+                        <Image.Triggers>
+                            <EventTrigger RoutedEvent="UserControl.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation x:Name="DA"
+                                         Storyboard.TargetName="LoadingImage"
+                                         Storyboard.TargetProperty="Width"
+                                         From="200"
+                                         To="200"
+                                         Duration="0:0:0.1"
+                                         Completed="Begin_Animation" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Image.Triggers>
+                    </Image>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <Grid Style="{StaticResource SidebarStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="70*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Opacity="0.5"
+                  Grid.Column="0"/>
+            
+            <Border Grid.Column="1"
+                    BorderBrush="#E9E9E9"
+                    BorderThickness="2 0 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Background="#FF424242">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button Style="{StaticResource ButtonBlueStyle}"
+                                Command="{Binding FilterDirectoriesDoneCommand}"
+                                Content="Done"/>
+                        
+                        <CheckBox Content="Check affects subdirectories"
+                                  IsChecked="{Binding CheckSubdirectories}"
+                                  Grid.Column="1"
+                                  VerticalAlignment="Center" 
+                                  Foreground="White"/>
+                    </Grid>
+                        
+                    <TreeView ItemsSource="{Binding RootDirectory}"
+                              Grid.Row="1"
+                              Margin="0">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type mod:DirectoryModel}" 
+                                                      ItemsSource="{Binding Path=Subdirectories, Mode=TwoWay}">
+
+                                <CheckBox Content="{Binding Path=Name, Mode=TwoWay}"
+                                          IsChecked="{Binding Path=IsChecked, Mode=TwoWay}"
+                                          Margin="2" />
+
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </Border> 
+        </Grid>
+
+        <Grid x:Name="LayoutRoot" 
+              Background="#FF424242">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="ChooseDirectoryButton"
+                        Style="{StaticResource ButtonOrangeStyle}"
+                        Command="{Binding SelectDirectoryCommand}"
+					    Margin="10 0 0 0"
+					    HorizontalAlignment="Left"
+                        IsDefault="True"
+					    Content="Choose Directory"/>
+
+                    <CheckBox x:Name="FilterSubdirectoriesCheckBox"
+                          IsEnabled="{Binding SubdirCheckboxEnabled}"
+                          IsChecked="{Binding SubdirCheckboxChecked}"
+                          Grid.Column="1"
+					      HorizontalAlignment="Right"
+					      VerticalAlignment="Center"
+					      Foreground="White"
+					      Content="Include Subdirectories" />
+
+                    <Button x:Name="FilterSubdirectoriesButton"
+                        Style="{StaticResource ButtonOrangeStyle}"
+                        IsEnabled="{Binding FilterSubdirBtnEnabled}"
+                        Command="{Binding FilterDirectoriesCommand}"
+					    Grid.Column="2"
+					    Margin="0 0 10 0"
+					    HorizontalAlignment="Right"
+					    Content="Filter Subdirectories"/>
+                </Grid>
+
+                <Label Grid.Row="1"
+				    Height="25"
+				    Margin="5 0 5 0"
+				    Foreground="White"
+				    VerticalAlignment="Top"
+				    Content="Chosen Directory:"/>
+
+                <Label Grid.Row="1"
+				    Margin="5 0 5 0"
+				    Height="25"
+				    Foreground="White"
+				    VerticalAlignment="Bottom"
+				    Content="{Binding DirTextboxText}"/>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                        IsEnabled="{Binding FilterTypesBtnEnabled}"
+                        Command="{Binding FilterTypesCommand}"
+					    Margin="10 0 0 0"
+					    HorizontalAlignment="Left"
+					    Content="Filter Types"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                        IsEnabled="{Binding ChoosePresetBtnEnabled}"
+                        Command="{Binding ShowPresetPanelCommand}"
+					    Grid.Column="1"
+					    Content="Choose Preset"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                        IsEnabled="{Binding OrganiseBtnEnabled}"
+                        Command="{Binding OrganiseCommand}"
+					    Grid.Column="2"
+					    Margin="0 0 10 0"
+					    HorizontalAlignment="Right"
+					    Content="Organise"/>
+                </Grid>
+
+                <Grid Style="{StaticResource FilterTypesStyle}" 
+                  Grid.Row="3" 
+                  Background="#FF424242">
+
+                    <Grid Style="{StaticResource SavePresetFilterStyle}"
+                      Background="#FF424242">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60*"/>
+                            <ColumnDefinition Width="40*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.ColumnSpan="2" 
+                               Margin=" 10 0 0 0"
+                               Content="Name of preset:" 
+                               Foreground="White" />
+
+                            <TextBox Grid.Row="1" 
+                                 Grid.ColumnSpan="2"
+                                 Margin=" 10 0 0 0"
+                                 Text="{Binding SavePresetText, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80" />
+                                <RowDefinition Height="80" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Button Style="{StaticResource ButtonBlueStyle}"
+                                Command="{Binding SavePresetCommand}"
+                                Content="Save Preset"/>
+
+                            <Button Grid.Row="1"
+                                Style="{StaticResource ButtonBlueStyle}"
+                                Command="{Binding HideSavePanelCommand}"
+                                Content="Cancel"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Background="#FF424242">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60*"/>
+                            <ColumnDefinition Width="40*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ItemsControl Margin="10 10 0 10"
+                                  ItemsSource="{Binding Filetypes}">
+                            <ItemsControl.Template>
+                                <ControlTemplate>
+                                    <WrapPanel IsItemsHost="True"
+								           FlowDirection="LeftToRight" 
+                                           Background="White"/>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="True"
+                                          Width="70"
+                                          Height="20"
+                                          Margin="5 5 5 0"
+                                          Content="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Style="{StaticResource ButtonBlueStyle}"
+                            Command="{Binding FilterTypesDoneCommand}"
+					        Grid.Column="1"
+					        VerticalAlignment="Top"
+					        Margin="0 10 0 0"
+					        Content="Done"/>
+
+                        <Button Style="{StaticResource ButtonBlueStyle}"
+                            Command="{Binding ShowSavePanelCommand}"
+					        Grid.Column="1"
+					        VerticalAlignment="Center"
+					        Content="Save As Preset"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Style="{StaticResource SelectPresetStyle}" 
+                  Grid.Row="3" 
+                  Background="#FF424242">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox Margin="10 0 0 0"
+                         ItemsSource="{Binding PresetNames}"
+                         SelectedItem="{Binding SelectedPreset}"/>
+
+                    <Button Style="{StaticResource ButtonBlueStyle}"
+                        Command="{Binding SelectPresetCommand}"
+					    Grid.Column="1"
+					    VerticalAlignment="Top"
+					    Margin="0 0 0 0"
+					    Content="Select Preset"/>
+
+                    <Button Style="{StaticResource ButtonBlueStyle}"
+                        Command="{Binding ClearSelectedPresetCommand}"
+					    Grid.Column="1"
+					    VerticalAlignment="Center"
+					    Content="Clear Selection"/>
+
+                    <Button Style="{StaticResource ButtonBlueStyle}"
+                        Command="{Binding ExitSelectPresetCommand}"
+					    Grid.Column="1"
+					    VerticalAlignment="Bottom"
+					    Content="Cancel"/>
+
+                </Grid>
+
+                <Grid Grid.Row="3" 
+                  Background="#FF424242">
+                    <TextBlock Foreground="White"
+						    HorizontalAlignment="Center"
+						    VerticalAlignment="Center">
+				    Click 'Filter Types' to select or deselect available types to be included in organisation. 
+				    <LineBreak />
+				    <LineBreak />
+				    Click 'Choose Preset' to choose from a predefined filetype filter.
+                    </TextBlock>
+                </Grid>
+            </Grid>
+            
+            <Label Content="{Binding FilterLabelText}"
+                   Grid.Row="1"
+                   Foreground="#3299BB"/>
+        </Grid>
+    </Grid>
+</UserControl>

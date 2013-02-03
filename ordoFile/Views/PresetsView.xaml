@@ -1,0 +1,239 @@
+﻿<UserControl x:Class="ordoFile.Views.PresetsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:ordoFile.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid Style="{StaticResource GridEditPresetStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60*"/>
+                    <ColumnDefinition Width="40*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    
+                    <Label Foreground="White"
+                           Content="Presets:"/>
+                    
+                    <ListBox Grid.Row="1" 
+                             Margin="10"
+                             ItemsSource="{Binding PresetNames}"
+                             SelectedItem="{Binding SelectedPreset}"
+                             SelectionMode="Single"/>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Edit Name:" 
+                           Foreground="White"/>
+
+                    <TextBox Grid.Row="1"
+                             Margin="0 10 10 0"
+                             Text="{Binding PresetEditTempName, Mode=TwoWay}"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                            Command="{Binding SavePresetEditsCommand}"
+                            Grid.Row="2" 
+                            VerticalAlignment="Top"
+                            Margin="0 10 0 0" 
+                            Content="Save Changes"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                            Command="{Binding HidePresetEditCommand}"
+                            Grid.Row="2" 
+                            VerticalAlignment="Center"
+                            Margin="0" 
+                            Content="Done"/>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60*"/>
+                    <ColumnDefinition Width="40*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Label Foreground="White"
+                           Content="Filetypes:"/>
+
+                    <ListBox Grid.Row="1" 
+                             Margin="10"
+                             SelectionMode="Multiple"
+                             ItemsSource="{Binding PresetEditFileTypes}"
+                             SelectedItem="{Binding PresetEditSelectedTypes}"
+                             />
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Filetype to add:" 
+                           Foreground="White" />
+
+                    <TextBox Grid.Row="1"
+                             Margin="0 10 10 0"
+                             Text="{Binding PresetEditType}"/>
+                    
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                            Command="{Binding PresetEditAddTypeCommand}"
+                            Grid.Row="2" 
+                            VerticalAlignment="Top"
+                            Margin="0 10 0 0" 
+                            Content="Add"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                            Command="{Binding PresetEditRemoveTypesCommand}"
+                            Grid.Row="2" 
+                            VerticalAlignment="Center"
+                            Margin="0" 
+                            Content="Remove Selected"/>
+                </Grid>
+            </Grid>
+
+            <Label Content="{Binding EditPresetErrorText}"
+                   Grid.Row="2"
+                   Foreground="Red"/>
+        </Grid>
+
+        <Grid Style="{StaticResource GridNewPresetStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60*"/>
+                    <ColumnDefinition Width="40*"/>
+                </Grid.ColumnDefinitions>
+            
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                
+                    <Label Content="Filetypes:"
+                           Foreground="White" />
+                
+                    <ListBox ItemsSource="{Binding NewPresetFileTypes}"
+                             SelectedItem="{Binding NewPresetSelectedTypes}"
+                             SelectionMode="Multiple"
+                             Grid.Row="1" 
+                             Margin="10" />
+                </Grid>
+            
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>                    
+                    </Grid.RowDefinitions>
+                    <Label Content="Provide a name:" 
+                           Foreground="White"/>
+
+                    <TextBox Grid.Row="1"
+                                 Margin="0 10 10 0"
+                                 Text="{Binding NewPresetName}"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                                Command="{Binding SaveNewPresetCommand}"
+                                Grid.Row="2" 
+                                VerticalAlignment="Top"
+                                Margin="0 10 0 0" 
+                                Content="Save Preset"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                                Command="{Binding HideNewPresetCommand}"
+                                Grid.Row="2" 
+                                VerticalAlignment="Center"
+                                Margin="0" 
+                                Content="Done"/>
+
+                    <Label Grid.Row="3"
+                           Content="Fileype to add:" 
+                           Foreground="White" />
+
+                    <TextBox Grid.Row="4"
+                                 Margin="0 10 10 0"
+                                 Text="{Binding NewPresetType}"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                            Command="{Binding NewPresetAddTypeCommand}"
+                            Grid.Row="5" 
+                            VerticalAlignment="Top"
+                            Margin="0 10 0 0" 
+                            Content="Add"/>
+
+                    <Button Style="{StaticResource ButtonOrangeStyle}"
+                                Command="{Binding NewPresetRemoveTypesCommand}"
+                                Grid.Row="6" 
+                                VerticalAlignment="Center"
+                                Margin="0" 
+                                Content="Remove Selected"/>
+                </Grid>
+            </Grid>
+            
+            <Label Content="{Binding NewPresetErrorText}"
+                   Grid.Row="1" 
+                   Foreground="Red"/>
+        </Grid>
+
+        <Grid Background="#FF424242">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Button Style="{StaticResource ButtonLargeOrangeStyle}" 
+                    Command="{Binding ShowPresetEditCommand}"
+                    Content="Edit Presets"/>
+
+            <Button Style="{StaticResource ButtonLargeOrangeStyle}" 
+                    Command="{Binding ShowNewPresetCommand}"
+                    Grid.Row="1" 
+                    Content="Create a Preset" />
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ExpressionBlendVersion>4.0.20525.0</ExpressionBlendVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{290EFD63-823F-4F67-B713-74E61EC562B2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ordoFile</RootNamespace>
+    <AssemblyName>ordoFile</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <ApplicationIcon>Application.ico</ApplicationIcon>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Utf8Output>true</Utf8Output>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Microsoft.Expression.Interactions" />
+    <Reference Include="System.Windows.Interactivity" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ViewModels\PresetsViewModel.cs" />
+    <Compile Include="Views\PresetsView.xaml.cs">
+      <DependentUpon>PresetsView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Converters\BoolToVisbilityConverter.cs" />
+    <Compile Include="Converters\NullVisbilityConverter.cs" />
+    <Compile Include="DataAccess\Configs.cs" />
+    <Compile Include="DataAccess\Logger.cs" />
+    <Compile Include="DependencyFactory.cs" />
+    <Compile Include="GUITools\GUIDispatcherUpdates.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataAccess\PresetFilters.cs" />
+    <Compile Include="Models\DirectoryModel.cs" />
+    <Compile Include="Models\FileDetailsModel.cs" />
+    <Compile Include="Models\Organisers\BackgroundOrganiser.cs" />
+    <Compile Include="Models\Organisers\ForegroundOrganiser.cs" />
+    <Compile Include="Models\Organisers\OrganiserBase.cs" />
+    <Compile Include="OrganisationSyncer.cs" />
+    <Compile Include="TrayApp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrayApp.Designer.cs">
+      <DependentUpon>TrayApp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\BackgroundViewModel.cs" />
+    <Compile Include="ViewModels\ForegroundViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\BackgroundView.xaml.cs">
+      <DependentUpon>BackgroundView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ForegroundView.xaml.cs">
+      <DependentUpon>ForegroundView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\PresetsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+    <None Include="Application.ico">
+      <Visible>false</Visible>
+    </None>
+    <Page Include="ResourceDictionaries\BackgroundResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ResourceDictionaries\ForegroundResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ResourceDictionaries\GenericStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionaries\NamedStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionaries\TriggerStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BackgroundView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ForegroundView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\blocks\frame0.gif" />
+    <Resource Include="Resources\blocks\frame1.gif" />
+    <Resource Include="Resources\blocks\frame10.gif" />
+    <Resource Include="Resources\blocks\frame11.gif" />
+    <Resource Include="Resources\blocks\frame12.gif" />
+    <Resource Include="Resources\blocks\frame13.gif" />
+    <Resource Include="Resources\blocks\frame14.gif" />
+    <Resource Include="Resources\blocks\frame15.gif" />
+    <Resource Include="Resources\blocks\frame16.gif" />
+    <Resource Include="Resources\blocks\frame17.gif" />
+    <Resource Include="Resources\blocks\frame18.gif" />
+    <Resource Include="Resources\blocks\frame19.gif" />
+    <Resource Include="Resources\blocks\frame2.gif" />
+    <Resource Include="Resources\blocks\frame20.gif" />
+    <Resource Include="Resources\blocks\frame21.gif" />
+    <Resource Include="Resources\blocks\frame22.gif" />
+    <Resource Include="Resources\blocks\frame23.gif" />
+    <Resource Include="Resources\blocks\frame3.gif" />
+    <Resource Include="Resources\blocks\frame4.gif" />
+    <Resource Include="Resources\blocks\frame5.gif" />
+    <Resource Include="Resources\blocks\frame7.gif" />
+    <Resource Include="Resources\blocks\frame8.gif" />
+    <Resource Include="Resources\blocks\frame9.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\blocks\frame6.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath32)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	     Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

@@ -1,0 +1,65 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+	xmlns:ic="http://schemas.microsoft.com/expression/2010/interactions"
+	xmlns:local="clr-namespace:ordoFile"
+    xmlns:vw="clr-namespace:ordoFile.Views"
+	mc:Ignorable="d"
+	x:Class="ordoFile.MainView"
+	d:DesignWidth="640" d:DesignHeight="480">
+    
+    <UserControl.Resources>
+        <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+    </UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200" />
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		
+		<Grid>
+            <Grid Background="#E9E9E9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+				    <Grid.RowDefinitions>
+					    <RowDefinition />
+					    <RowDefinition />
+					    <RowDefinition />
+				    </Grid.RowDefinitions>
+				
+				    <Button Style="{StaticResource ButtonMenuStyle}" 
+                            Content="Foreground Organiser"
+                            Command="{Binding SetContentViewCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+
+                    <Button Style="{StaticResource ButtonMenuStyle}" 
+                            Grid.Row="1"
+                            Content="Background Organiser"
+                            Command="{Binding SetContentViewCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+
+                    <Button Style="{StaticResource ButtonMenuStyle}" 
+                            Grid.Row="2"
+                            Content="Presets"
+                            Command="{Binding SetContentViewCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+			    </Grid>
+                
+                <Grid Grid.Column="1">
+                    
+                </Grid>
+            </Grid>
+		</Grid>
+		<Grid Grid.Column="1"  >
+            <ContentPresenter Content="{Binding SelectedView}" />
+        </Grid>
+	</Grid>
+</UserControl>

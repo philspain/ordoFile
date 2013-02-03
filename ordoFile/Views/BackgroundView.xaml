@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="ordoFile.Views.BackgroundView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             x:Name="UserControl">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" 
+          Background="#FF424242">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Style="{StaticResource ButtonOrangeStyle}"
+                    Command="{Binding ChooseFolderCommand}"
+					Margin="10 0 0 0"
+					HorizontalAlignment="Left"
+					Content="Choose Folder"/>
+
+            <Button Style="{StaticResource ButtonOrangeStyle}"
+                    IsEnabled="{Binding BGOrganiseButtonEnabled}"
+					Grid.Column="1"
+					Content="Organise"/>
+
+            <Grid Name="BGCheckBoxGrid"
+                        Grid.Column="2"
+                        Height="40"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="10 0 0 0" >
+
+                <CheckBox IsChecked="{Binding StartupChecked}" 
+                          Content="Load at start-up"
+                          Foreground="White"/>
+
+                <CheckBox IsEnabled="{Binding BGOrganisationEnabled}"
+                          IsChecked="{Binding BGFilterSubDirsChecked}" 
+                          Content="Include Subdirectories" 
+                          VerticalAlignment="Bottom" 
+                          Foreground="White"/>
+            </Grid>
+        </Grid>
+
+        <Label Grid.Row="1"
+					Height="25"
+					Margin="5 0 5 0"
+					Foreground="White"
+					VerticalAlignment="Top"
+					Content="Chosen Directory:"/>
+        
+        <Label Grid.Row="1"
+					Margin="5 0 5 0"
+					Height="25"
+					Foreground="White"
+					VerticalAlignment="Bottom"
+					Content="{Binding BGDirectoryLabelText}" />
+
+        <Grid Grid.Row="3" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="40*"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox ItemsSource="{Binding PresetNames}"
+                     SelectedItem="{Binding SelectedPreset}"
+                     IsEnabled="{Binding BGOrganisationEnabled}"
+                     Margin="10" />
+
+            <Button Style="{StaticResource ButtonBlueStyle}"
+                    IsEnabled="{Binding BGOrganisationEnabled}"
+					Grid.Column="1"
+					VerticalAlignment="Top"
+					Margin="0 10 0 0"
+					Content="Select None"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,16 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:ordoFile" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="ordoFile.MainWindow"
+	x:Name="Window" 
+	Title="MainWindow"
+	MinWidth="715" MinHeight="448"
+	Width="715" Height="448" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" WindowStyle="None">
+
+	<Grid x:Name="LayoutRoot" 
+		  Background="#E9E9E9">
+		<local:MainView />		
+	</Grid>
+</Window>

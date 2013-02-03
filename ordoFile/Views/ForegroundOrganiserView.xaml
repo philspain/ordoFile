@@ -1,0 +1,296 @@
+﻿<UserControl x:Class="ordoFile.Views.ForegroundOrganiserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:ordoFile.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="815">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source="/ResourceDictionaries/ForegroundResourceDictionary.xaml" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid Name="WaitGrid"
+              Style="{StaticResource WaitGridStyle}">
+
+            <Grid Name="OpacityGrid"
+                  Style="{StaticResource OpacityGridStyle}">
+
+                <Grid Name="WaitImageContainerGrid" 
+                      Style="{StaticResource WaitImageContainerStyle}">
+
+                    <Label Name="WaitLabel"
+                               Style="{StaticResource WaitLabelStyle}"/>
+
+                    <Image  />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Name="SidebarGrid" 
+              Style="{StaticResource SidebarStyle}">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid Name="FilterDirsGrid" 
+                  Style="{StaticResource FilterDirsStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource FilterDirsBorder}">
+
+                    <Grid Background="White">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="5*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="Silver">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="ExitFilterDirsBtn" 
+                                    Style="{StaticResource ExitFilterDirsBtnStyle}"/>
+
+                            <CheckBox Name="CheckSubdirectoryCheckBox" 
+                                      Style="{StaticResource CheckSubdirectoryCheckBoxStyle}"/>
+                        </Grid>
+
+                        <TreeView Name="DirectoryTree"
+                                  Style="{StaticResource DirectoryTreeStyle}">
+                        </TreeView>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Name="FileTypeGrid" 
+                  Style="{StaticResource FilterTypesStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource FileTypeBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="5*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="Silver">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="ExitTypeGridBtn" 
+                                    Style="{StaticResource ExitTypeGridBtnStyle}" />
+
+                            <Button Name="SaveAsPresetBtn"
+                                    Style="{StaticResource SaveAsPresetBtnStyle}" />
+                        </Grid>
+
+                        <Grid Name="SavePresetGrid"
+                              Style="{StaticResource SavePresetFilterStyle}">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <Label Content="Preset Name: " />
+                                
+                                <TextBox Name="PresetTextBox" 
+                                         Style="{StaticResource PresetTextBoxStyle}"/>
+                            </StackPanel>
+
+                            <Button Name="SavePresetBtn" 
+                                    Style="{StaticResource SavePresetBtnStyle}"/>
+
+                            <Button Name="CancelSavingBtn" 
+                                    Style="{StaticResource CancelSavingBtnStyle}"/>
+
+                        </Grid>
+
+                        <ItemsControl Name="TypesControl" 
+                                      Style="{StaticResource TypesControlStyle}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Name="ChoosePresetGrid"
+                  Style="{StaticResource SelectPresetStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource ChoosePresetBorderStyle}">
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="Silver">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="SelectPresetBtn" 
+                                    Style="{StaticResource SelectPresetBtnStyle}"/>
+
+                            <Button Name="ExitPresetBtn"
+                                    Style="{StaticResource ExitPresetBtnStyle}"/>
+
+                        </Grid>
+
+                        <ListBox Name="PresetsListBox" 
+                                 Style="{StaticResource PresetListBoxStyle}"/>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*" />
+                                    <RowDefinition Height="4*" />
+                                </Grid.RowDefinitions>
+
+                                <TextBox Name="EditPresetNameTextBox" 
+                                         Style="{StaticResource EditPresetNameTextBoxStyle}"/>
+
+                                <Border Style="{StaticResource EditPresetTypesBorderStyle}">
+                                    <ScrollViewer Style="{StaticResource EditPresetTypesScrollStyle}"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="2*" />
+                                    <RowDefinition Height="3*" />
+                                </Grid.RowDefinitions>
+
+                                <Button Name="SavePresetEditsBtn" 
+                                        Style="{StaticResource SavePresetEditsBtnStyle}"/>
+
+                                <Label Name="EditPresetLabel"
+                                       Grid.Row="1" />
+
+                                <TextBox Name="AddTypeTextBox"
+                                         Style="{StaticResource AddTypeTextBoxStyle}"/>
+
+                                <Button Name="AddTypeButton"
+                                        Style="{StaticResource AddTypeButtonStyle}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid Style="{StaticResource TopGridGradient}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Panel.ZIndex="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Name="ChooseFolderBtn" 
+                            Style="{StaticResource ChooseFolderBtnStyle}" />
+                    <Button Name="FilterSubdirBtn" 
+                            Style="{StaticResource FilterSubdirBtnStyle}"/>
+
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                
+                <Label  Name="DirectoryLabel"
+                        Style="{StaticResource DirectoryLabelStyle}"/>
+                
+                <CheckBox Name="SubdirCheckbox" 
+                          Style="{StaticResource SubdirCheckboxStyle}" />
+                
+                <Label Name="DirLabel" 
+                       Style="{StaticResource DirPathLabelStyle}"/>
+                
+                
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Name="FilterTypesBtn" 
+                            Style="{StaticResource FilterTypesBtnStyle}"/>
+
+                    <Button Name="ChoosePresetBtn" 
+                            Style="{StaticResource ChoosePresetBtnStyle}" />
+
+                    <Button Name="OrganiseBtn" 
+                            Style="{StaticResource OrganiseBtnStyle}" />
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+
+                <Label Name="FilterLabel"
+                       Style="{StaticResource FilterLabelStyle}"/>
+
+                <ProgressBar Name="OrganisationProgress" 
+                             Style="{StaticResource OrganisationProgressStyle}" />
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>
