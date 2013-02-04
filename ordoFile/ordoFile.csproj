@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\PresetsViewModel.cs" />
     <Compile Include="Views\PresetsView.xaml.cs">
       <DependentUpon>PresetsView.xaml</DependentUpon>
@@ -183,6 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\blocks\frame6.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Exit.gif" />
+    <Resource Include="Resources\Exit_MouseOver.gif" />
+    <Resource Include="Resources\Minimise.gif" />
+    <Resource Include="Resources\Minimise_MouseOver.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath32)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

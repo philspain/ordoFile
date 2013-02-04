@@ -16,10 +16,13 @@ namespace ordoFile.ViewModels
                     _presetsView,
                     _selectedView;
 
-        public ICommand _setContentViewCommand;
+        ICommand _setContentViewCommand;
+
+        int _screenWidth, _screenHeight;
 
         public MainViewModel()
         {
+            
         }
 
         /// <summary>

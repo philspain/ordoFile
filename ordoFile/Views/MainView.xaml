@@ -15,7 +15,9 @@
         <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
     </UserControl.Resources>
 
-	<Grid x:Name="LayoutRoot">
+	<Grid x:Name="LayoutRoot"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="200" />
 			<ColumnDefinition Width="*"/>

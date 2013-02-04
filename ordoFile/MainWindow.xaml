@@ -1,25 +1,75 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:local="clr-namespace:ordoFile" 
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:ordoFile" 
+    xmlns:vw="clr-namespace:ordoFile.ViewModels" 
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+	xmlns:ic="http://schemas.microsoft.com/expression/2010/interactions"
 	x:Class="ordoFile.MainWindow"
 	x:Name="Window" 
 	Title="MainWindow"
 	MinWidth="715" MinHeight="448"
-	Width="715" Height="478" ResizeMode="CanResizeWithGrip" AllowsTransparency="True" WindowStyle="None">
+	Width="715" Height="478" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+    BorderThickness="0">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <vw:MainWindowViewModel />
+    </Window.DataContext>
+    
 	<Grid x:Name="LayoutRoot" 
 		  Background="#E9E9E9">
         <DockPanel LastChildFill="True">
             <Grid Height="30"
                   DockPanel.Dock="Top"
                   Background="#3299BB"
-                  MouseDown="ClickToMove">
-                <UniformGrid Columns="3" Rows="1" Width="84">
-                    <Button Click="ClickToMinimise"></Button>
-                    <Button Click="ClickToMaximise"></Button>
-                    <Button Click="ClickToExit"></Button>
+                  MouseDown="ClickToMove"
+                  Cursor="SizeAll">
+                
+                <UniformGrid Columns="2" 
+                             Rows="1" 
+                             Width="56"
+                             Height="28"
+                             HorizontalAlignment="Right">
+                    
+                    <Button Style="{StaticResource FlatButtonStyle}"
+                            Click="ClickToMinimise"
+                            Cursor="Arrow">
+                        <Image Source="{Binding MinimiseImage}" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <ic:CallMethodAction MethodName="MinimiseMouseEnter" TargetObject="{Binding}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <ic:CallMethodAction MethodName="MinimiseMouseExit" TargetObject="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Image>
+                    </Button>
+                    <Button Style="{StaticResource FlatButtonStyle}"
+                            Click="ClickToExit"
+                            Cursor="Arrow">
+                        <Image Source="{Binding ExitImage}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <ic:CallMethodAction MethodName="ExitMouseEnter" TargetObject="{Binding}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <ic:CallMethodAction MethodName="ExitMouseExit" TargetObject="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Image>
+                    </Button>
                 </UniformGrid>
             </Grid>
             <local:MainView />

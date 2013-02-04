@@ -26,17 +26,7 @@ namespace ordoFile
 
 			// Insert code required on object creation below this point.
 
-            MainViewModel mainViewModel = new MainViewModel();
-            mainViewModel.BackgroundView = 
-                DependencyFactory.Container.Resolve<BackgroundView>();
-            mainViewModel.ForegroundView =
-                DependencyFactory.Container.Resolve<ForegroundView>();
-            mainViewModel.PresetsView =
-                DependencyFactory.Container.Resolve<PresetsView>();
-            mainViewModel.SelectedView =
-                ((ForegroundView)DependencyFactory.Container.Resolve(typeof(ForegroundView), "foregroundView"));
-
-            this.DataContext = mainViewModel;
+            
 		}
 
         public void ClickToMove(object sender, RoutedEventArgs reArgs)
@@ -52,14 +42,6 @@ namespace ordoFile
         public void ClickToMinimise(object sender, RoutedEventArgs reArgs)
         {
             Window.WindowState = WindowState.Minimized;
-        }
-
-        public void ClickToMaximise(object sender, RoutedEventArgs reArgs)
-        {
-            if(Window.WindowState != WindowState.Maximized)
-                Window.WindowState = WindowState.Maximized;
-            else
-                Window.WindowState = WindowState.Normal;
         }
 	}
 }
