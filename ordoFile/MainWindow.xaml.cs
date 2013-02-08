@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using ordoFile.ViewModels;
 using ordoFile.Views;
 using Microsoft.Practices.Unity;
+using ordoFile.DataAccess;
 
 namespace ordoFile
 {
@@ -20,13 +21,20 @@ namespace ordoFile
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public MainWindow()
+		Configs _configs;
+        TrayApp _trayApp;
+
+        public MainWindow()
 		{
 			this.InitializeComponent();
 
-			// Insert code required on object creation below this point.
+            _configs = (Configs)DependencyFactory.Container.Resolve(typeof(Configs), "configs");
+            _trayApp = (TrayApp)DependencyFactory.Container.Resolve(typeof(TrayApp), "trayApp");
 
-            
+            MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(_trayApp,
+                (OrganisationSyncer)DependencyFactory.Container.Resolve(typeof(OrganisationSyncer), "organisationSyncer"));
+
+            this.DataContext = mainWindowViewModel;
 		}
 
         public void ClickToMove(object sender, RoutedEventArgs reArgs)
@@ -36,12 +44,27 @@ namespace ordoFile
 
         public void ClickToExit(object sender, RoutedEventArgs reArgs)
         {
-            Window.Close();
+            this.Close();
         }
 
         public void ClickToMinimise(object sender, RoutedEventArgs reArgs)
         {
             Window.WindowState = WindowState.Minimized;
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (_trayApp.WindowShouldMinimise)
+            {
+                e.Cancel = true;
+                _trayApp.ChangeGUIVisibility();
+            }
+            else
+            {
+                _configs.SaveConfigs();
+            }
+
+            base.OnClosing(e);
         }
 	}
 }

@@ -106,7 +106,7 @@ namespace ordoFile
 
             // Retrieve the icon resource to be used in taskbar as a stream.
             Stream iconStream = System.Windows.Application.GetResourceStream(
-                new Uri("pack://application:,,,/Resources/icon.ico")).Stream;
+                new Uri("pack://application:,,,/Resources/images/icon.ico")).Stream;
 
             _trayIcon.Icon = new Icon(iconStream, 38, 42);
             _trayIcon.Text = "ordoFile";

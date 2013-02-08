@@ -892,7 +892,7 @@ namespace ordoFile.ViewModels
                             continue;
                         }
 
-                        OrganiseBtnEnabled = false;
+                        OrganiseBtnEnabled = true;
                         FilterLabelText = _currentDirectory;
                     }
                 );
@@ -901,6 +901,8 @@ namespace ordoFile.ViewModels
             {
                 // Show wait grid
                 WaitGridZIndex = "Visible";
+
+                // 
                 WaitGridText = "Organising";
 
                 _organisationSyncer.ForegroundOrganiserRunning = true;

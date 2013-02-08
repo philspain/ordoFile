@@ -30,7 +30,7 @@ namespace ordoFile.ViewModels
 
         OrganisationSyncer _organisationSyncer;
 
-        ICommand _chooseFolderCommand,
+        ICommand _selectDirectoryCommand,
                  _organisationCommand,
                  _cancelOrganisationCommand,
                  _deselectPresetCommand;
@@ -212,10 +212,10 @@ namespace ordoFile.ViewModels
         {
             get
             {
-                if (_chooseFolderCommand == null)
-                    _chooseFolderCommand = new DelegateCommand(ChooseFolder);
+                if (_selectDirectoryCommand == null)
+                    _selectDirectoryCommand = new DelegateCommand(SelectDirectory);
 
-                return _chooseFolderCommand;
+                return _selectDirectoryCommand;
             }
         }
 
@@ -228,22 +228,12 @@ namespace ordoFile.ViewModels
             {
                 if (_organisationCommand == null)
                     _organisationCommand = new DelegateCommand(Organise);
+                else if(_bgOrganiseButtonContent == "Start")
+                    _organisationCommand = new DelegateCommand(Organise);
+                else if (_bgOrganiseButtonContent == "Stop")
+                    _organisationCommand = new DelegateCommand(StopOrganisation);
 
                 return _organisationCommand;
-            }
-        }
-
-        /// <summary>
-        /// Command for organising files in selected directory.
-        /// </summary>
-        public ICommand CancelOrganisationCommand
-        {
-            get
-            {
-                if (_cancelOrganisationCommand == null)
-                    _cancelOrganisationCommand = new DelegateCommand(StopOrganisation);
-
-                return _cancelOrganisationCommand;
             }
         }
 
@@ -267,8 +257,8 @@ namespace ordoFile.ViewModels
 
             if (_organisationSyncer != null)
             {
-                _organisationSyncer.OrganiseInBackground += OrganiseEvent;
-                _organisationSyncer.StopBackgroundOrganisation += StopOrganisationEvent;
+                _organisationSyncer.OrganiseInBackground += (sender, args) => { Organise(); };
+                _organisationSyncer.StopBackgroundOrganisation += (sender, args) => { StopOrganisation(); };
             }
 
             if (_configs.BGDirectoryExists)
@@ -305,7 +295,7 @@ namespace ordoFile.ViewModels
         /// <summary>
         /// Select directory to be organised.
         /// </summary>
-        void ChooseFolder()
+        void SelectDirectory()
         {
             System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
 
@@ -318,11 +308,6 @@ namespace ordoFile.ViewModels
             }
         }
 
-        void StopOrganisationEvent(object sender, EventArgs e)
-        {
-            StopOrganisation();
-        }
-
         /// <summary>
         /// Stop organisation that is currently in progress.
         /// </summary>
@@ -330,12 +315,12 @@ namespace ordoFile.ViewModels
         {
             _bgOrganiser.Stop();
             BGOrganiseButtonContent = "Start";
+            BGOrganisationEnabled = true;
             _organisationSyncer.ChangeOrganisationText();
-        }
 
-        void OrganiseEvent(object sender, EventArgs e)
-        {
-            Organise();
+            // Have GUI request updated organisation command
+            // to allow organisation to be started.
+            OnPropertyChanged("OrganisationCommand");
         }
 
         /// <summary>
@@ -370,6 +355,10 @@ namespace ordoFile.ViewModels
                 _organisationSyncer.BackgroundOrganiserRunning = true;
                 BGOrganisationEnabled = false;
                 BGOrganiseButtonContent = "Stop";
+
+                // Have GUI request updated organisation command
+                // to allow organisation to be stopped.
+                OnPropertyChanged("OrganisationCommand");
 
                 // Change text in the tray menu to reflect organisation status
                 _organisationSyncer.ChangeOrganisationText();
@@ -411,12 +400,17 @@ namespace ordoFile.ViewModels
         {
             try
             {
+                // Check key has been placed into registry already
                 bool registryKeyExists = ((IList<string>)Registry.CurrentUser.GetSubKeyNames()).Contains("ordoFile");
+
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
 
-                if (isChecked && !registryKeyExists)
+                if (isChecked)
                 {
-                    key.SetValue("ordoFile", "\"" + _appLocation + "\" -bg");
+                    if (!registryKeyExists)
+                    {
+                        key.SetValue("ordoFile", "\"" + _appLocation + "\" -bg");
+                    }
                 }
                 else
                 {

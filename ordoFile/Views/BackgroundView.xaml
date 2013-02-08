@@ -30,15 +30,16 @@
             </Grid.ColumnDefinitions>
 
             <Button Style="{StaticResource ButtonOrangeStyle}"
-                    Command="{Binding ChooseFolderCommand}"
+                    Command="{Binding SelectDirectoryCommand}"
 					Margin="10 0 0 0"
 					HorizontalAlignment="Left"
-					Content="Choose Folder"/>
+					Content="Select Directory"/>
 
             <Button Style="{StaticResource ButtonOrangeStyle}"
                     IsEnabled="{Binding BGOrganiseButtonEnabled}"
-					Grid.Column="1"
-					Content="Organise"/>
+					Content="{Binding BGOrganiseButtonContent}" 
+                    Command="{Binding OrganisationCommand}"
+                    Grid.Column="1"/>
 
             <Grid Name="BGCheckBoxGrid"
                         Grid.Column="2"

@@ -14,7 +14,7 @@ namespace ordoFile.Models.Organisers
     {
         public ForegroundOrganiser(DirectoryModel rootDirectory) : base()
         {
-            _rootDirectory = rootDirectory;
+            base._rootDirectory = rootDirectory;
         }
 
         public override bool OrganiseSubDirectories
@@ -29,8 +29,13 @@ namespace ordoFile.Models.Organisers
 
             try
             {
-                base._organisationThread = new Thread(base.Organise);
-                _organisationThread.Start();
+                base._organisationThread = new Thread(
+                    () => 
+                    { 
+                        base.Organise();
+                        base._isWorking = false;
+                    });
+                base._organisationThread.Start();
             }
             catch (Exception ex)
             {

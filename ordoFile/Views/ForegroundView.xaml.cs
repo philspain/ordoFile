@@ -61,7 +61,7 @@ namespace ordoFile.Views
         { 
             for(int i = 0; i < _numOfImages; i++)
             {
-                string imageName = "/Resources/blocks/frame" + i + ".gif";
+                string imageName = "/Resources/images/blocks/frame" + i + ".gif";
 
                 Stream bitmapStream = Application.GetResourceStream(new Uri(imageName, UriKind.Relative)).Stream;
 

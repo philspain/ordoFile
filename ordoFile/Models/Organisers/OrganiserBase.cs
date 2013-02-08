@@ -18,6 +18,8 @@ namespace ordoFile.Models.Organisers
         // Name of preset if user has chosen one.
         string _presetName;
 
+        long _totalFileSize = 0;
+
         // Whether or not root directory's subdirectories should be organised.
         protected bool _organiseSubDirectories,
                        _isWorking;
@@ -256,7 +258,7 @@ namespace ordoFile.Models.Organisers
                             Console.WriteLine(fileType + " - " + s);
                         }
 
-                        /// Check that user has selected any filte-types to filter to
+                        /// Check that user has selected any filetypes to filter to
                         /// and that the current file is of one of these types.
                         /// If there are no filters chosen, or the previous two states
                         /// evaluate as true, create a FilesInfo object for the file.
@@ -344,6 +346,8 @@ namespace ordoFile.Models.Organisers
         {
             if (Directory.Exists(_rootDirectory.Path))
             {
+                GetFileObjects(_rootDirectory, ref _totalFileSize);
+
                 foreach (FileDetailsModel curFile in _filesToMove)
                 {
                     if (!curFile.FilePath.Contains("ordoFiled"))

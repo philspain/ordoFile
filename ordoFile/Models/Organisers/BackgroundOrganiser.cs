@@ -39,7 +39,7 @@ namespace ordoFile.Models.Organisers
         }
 
         /// <summary>
-        /// Get or set the _shouldWork value which tells the thread
+        /// Get or set the _canWork value which tells the thread
         /// whether or not to continue working.
         /// </summary>
         public bool CanWork
