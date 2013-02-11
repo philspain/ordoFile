@@ -21,8 +21,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ObjectInstances.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <conv:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
 

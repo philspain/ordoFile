@@ -6,16 +6,22 @@
 	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 	xmlns:ic="http://schemas.microsoft.com/expression/2010/interactions"
 	xmlns:local="clr-namespace:ordoFile"
+    xmlns:conv="clr-namespace:ordoFile.Converters"
     xmlns:vw="clr-namespace:ordoFile.Views"
 	mc:Ignorable="d"
 	x:Class="ordoFile.MainView"
 	d:DesignWidth="640" d:DesignHeight="480">
-    
+
     <UserControl.Resources>
-        <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictionaries/NamedStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ObjectInstances.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-	<Grid x:Name="LayoutRoot"
+    <Grid x:Name="LayoutRoot"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch">
 		<Grid.ColumnDefinitions>
@@ -25,10 +31,6 @@
 		
 		<Grid>
             <Grid Background="#E9E9E9">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="50" />
-                </Grid.ColumnDefinitions>
 
                 <Grid>
 				    <Grid.RowDefinitions>
@@ -36,24 +38,57 @@
 					    <RowDefinition />
 					    <RowDefinition />
 				    </Grid.RowDefinitions>
-				
-				    <Button Style="{StaticResource ButtonMenuStyle}" 
-                            Content="Foreground Organiser"
+
+                    <Button Style="{StaticResource ButtonMenuStyle}"
                             Command="{Binding SetContentViewCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                            Name="ForegroundOrganiser">
+                        <Grid Height="30"
+                              Width="200">
+                            <Image Source="/Resources/images/MenuButtonBackground.gif"
+                                   Visibility="{Binding ForegroundImageVisible, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <TextBlock Height="20"
+                                       Width="150" 
+                                       Text="Foreground Organiser"
+                                       TextAlignment="Right"
+                                       Margin="0 0 20 0"/>
+                        </Grid>
+                    </Button>
 
                     <Button Style="{StaticResource ButtonMenuStyle}" 
                             Grid.Row="1"
-                            Content="Background Organiser"
                             Command="{Binding SetContentViewCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                            Name="BackgroundOrganiser">
+                        <Grid Height="30"
+                              Width="200">
+                            <Image Source="/Resources/images/MenuButtonBackground.gif"
+                                   Visibility="{Binding BackgroundImageVisible, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <TextBlock Height="20"
+                                       Width="150" 
+                                       Text="Background Organiser"
+                                       TextAlignment="Right"
+                                       Margin="0 0 20 0"/>
+                        </Grid>
+                    </Button>
 
                     <Button Style="{StaticResource ButtonMenuStyle}" 
                             Grid.Row="2"
-                            Content="Presets"
                             Command="{Binding SetContentViewCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
-			    </Grid>
+                            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Name}"
+                            Name="Presets">
+                        <Grid Height="30"
+                              Width="200">
+                            <Image Source="/Resources/images/MenuButtonBackground.gif"
+                                   Visibility="{Binding PresetsImageVisible, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <TextBlock Height="20"
+                                       Width="150" 
+                                       Text="Presets"
+                                       TextAlignment="Right"
+                                       Margin="0 0 20 0"/>
+                        </Grid>
+                    </Button>
+                </Grid>
                 
                 <Grid Grid.Column="1">
                     

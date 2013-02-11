@@ -208,7 +208,7 @@ namespace ordoFile.ViewModels
         /// Property for getting command for choosing the background
         /// directory to be organised.
         /// </summary>
-        public ICommand ChooseFolderCommand
+        public ICommand SelectDirectoryCommand
         {
             get
             {

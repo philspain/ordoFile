@@ -616,7 +616,7 @@ namespace ordoFile.ViewModels
         void OnInitialise()
         {
             SetButtonEnabledStates(false);
-
+            
             SubdirCheckboxEnabled = false;
 
             DirTextboxText = "No directory currently chosen.";

@@ -92,10 +92,9 @@
 
                     <ListBox Grid.Row="1" 
                              Margin="10"
-                             SelectionMode="Multiple"
-                             ItemsSource="{Binding PresetEditFileTypes}"
-                             SelectedItem="{Binding PresetEditSelectedTypes}"
-                             />
+                             SelectionMode="Extended"
+                             Name="PresetEditFileTypes"
+                             ItemsSource="{Binding PresetEditFileTypes}" />
                 </Grid>
 
                 <Grid Grid.Column="1">
@@ -121,6 +120,7 @@
 
                     <Button Style="{StaticResource ButtonOrangeStyle}"
                             Command="{Binding PresetEditRemoveTypesCommand}"
+                            CommandParameter="{Binding ElementName=PresetEditFileTypes, Path=SelectedItems}"
                             Grid.Row="2" 
                             VerticalAlignment="Center"
                             Margin="0" 
@@ -155,8 +155,9 @@
                            Foreground="White" />
                 
                     <ListBox ItemsSource="{Binding NewPresetFileTypes}"
-                             SelectedItem="{Binding NewPresetSelectedTypes}"
-                             SelectionMode="Multiple"
+                             SelectedItem="{Binding NewPresetSelectedTypes, Mode=OneWayToSource}"
+                             Name="NewPresetFileTypes"
+                             SelectionMode="Extended"
                              Grid.Row="1" 
                              Margin="10" />
                 </Grid>
@@ -207,11 +208,12 @@
                             Content="Add"/>
 
                     <Button Style="{StaticResource ButtonOrangeStyle}"
-                                Command="{Binding NewPresetRemoveTypesCommand}"
-                                Grid.Row="6" 
-                                VerticalAlignment="Center"
-                                Margin="0" 
-                                Content="Remove Selected"/>
+                            Command="{Binding NewPresetRemoveTypesCommand}"
+                            CommandParameter="{Binding ElementName=NewPresetFileTypes, Path=SelectedItems}"
+                            Grid.Row="6" 
+                            VerticalAlignment="Center"
+                            Margin="0" 
+                            Content="Remove Selected"/>
                 </Grid>
             </Grid>
             

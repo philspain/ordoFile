@@ -18,12 +18,57 @@ namespace ordoFile.ViewModels
 
         ICommand _setContentViewCommand;
 
-        int _screenWidth, _screenHeight;
+        bool _foregroundImageVisible,
+             _backgroundImageVisible,
+             _presetsImageVisible;
 
         public MainViewModel()
         {
-            
+            Initialise();
         }
+
+        /// <summary>
+        /// Property for getting/setting whether or not the foreground
+        /// organiser button's background image is visible.
+        /// </summary>
+        public bool ForegroundImageVisible
+        {
+            get { return _foregroundImageVisible; }
+            set
+            {
+                _foregroundImageVisible = value;
+                OnPropertyChanged("ForegroundImageVisible");
+            }
+        }
+
+        /// <summary>
+        /// Property for getting/setting whether or not the background
+        /// organiser button's background image is visible.
+        /// </summary>
+        public bool BackgroundImageVisible
+        {
+            get { return _backgroundImageVisible; }
+            set
+            {
+                _backgroundImageVisible = value;
+                OnPropertyChanged("BackgroundImageVisible");
+            }
+        }
+
+        /// <summary>
+        /// Property for getting/setting whether or not the presets
+        /// button's background image is visible.
+        /// </summary>
+        public bool PresetsImageVisible
+        {
+            get { return _presetsImageVisible; }
+            set
+            {
+                _presetsImageVisible = value;
+                OnPropertyChanged("PresetsImageVisible");
+            }
+        }
+
 
         /// <summary>
         /// View that is to be shown in MainView's content grid.
@@ -73,20 +118,33 @@ namespace ordoFile.ViewModels
             }
         }
 
+        void Initialise()
+        {
+            ForegroundImageVisible = true;
+
+            BackgroundImageVisible = PresetsImageVisible = false;
+        }
+
         void SetContentView(object text)
         {
             string buttonContent = ((string) text);
 
             switch (buttonContent)
             {
-                case "Foreground Organiser":
+                case "ForegroundOrganiser":
                     SelectedView = _foregroundView;
+                    ForegroundImageVisible = true;
+                    BackgroundImageVisible = PresetsImageVisible = false;
                     break;
-                case "Background Organiser":
+                case "BackgroundOrganiser":
                     SelectedView = _backgroundView;
+                    BackgroundImageVisible = true;
+                    ForegroundImageVisible = PresetsImageVisible = false;
                     break;
                 case "Presets":
                     SelectedView = _presetsView;
+                    PresetsImageVisible = true;
+                    BackgroundImageVisible = ForegroundImageVisible = false;
                     break;
             }
         }

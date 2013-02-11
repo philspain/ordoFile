@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ordoFile.Commands;
 using ordoFile.GUITools;
+using System.Collections;
+using System.Windows.Controls;
 
 namespace ordoFile.ViewModels
 {
@@ -159,20 +161,6 @@ namespace ordoFile.ViewModels
         }
 
         /// <summary>
-        /// Collection of filetypes for selected preset.
-        /// </summary>
-        public string PresetEditSelectedTypes
-        {
-            set
-            {
-                if (_presetEditSelectedTypes.Contains(value))
-                    _presetEditSelectedTypes.Remove(value);
-                else
-                    _presetEditSelectedTypes.Add(value);
-            }
-        }
-
-        /// <summary>
         /// Property to be bound to grid in UI and informs it of
         /// it's ZIndex value.
         /// </summary>
@@ -226,20 +214,6 @@ namespace ordoFile.ViewModels
                 }
 
                 return _newPresetFileTypes;
-            }
-        }
-
-        /// <summary>
-        /// Collection of filetypes for selected preset.
-        /// </summary>
-        public string NewPresetSelectedTypes
-        {
-            set
-            {
-                if (_newPresetSelectedTypes.Contains(value))
-                    _newPresetSelectedTypes.Remove(value);
-                else
-                    _newPresetSelectedTypes.Add(value);
             }
         }
 
@@ -338,7 +312,7 @@ namespace ordoFile.ViewModels
             get
             {
                 if (_presetEditRemoveTypesCommand == null)
-                    _presetEditRemoveTypesCommand = new DelegateCommand(PresetEditRemoveTypes);
+                    _presetEditRemoveTypesCommand = new DelegateCommand<object>(PresetEditRemoveTypes);
 
                 return _presetEditRemoveTypesCommand;
             }
@@ -412,7 +386,7 @@ namespace ordoFile.ViewModels
             get
             {
                 if (_newPresetRemoveTypesCommand == null)
-                    _newPresetRemoveTypesCommand = new DelegateCommand(NewPresetRemoveTypes);
+                    _newPresetRemoveTypesCommand = new DelegateCommand<object>(NewPresetRemoveTypes);
 
                 return _newPresetRemoveTypesCommand;
             }
@@ -512,9 +486,12 @@ namespace ordoFile.ViewModels
         /// <summary>
         /// Remove selected filetypes from collection of available types.
         /// </summary>
-        void PresetEditRemoveTypes()
+        void PresetEditRemoveTypes(object selectedItems)
         {
-            GUIDispatcherUpdates.RemoveItemsFromCollection(_presetEditFileTypes, _presetEditSelectedTypes);
+            IList selectedItemList = (IList) selectedItems;
+            var selectedTypes = selectedItemList.Cast<string>();
+            
+            GUIDispatcherUpdates.RemoveItemsFromCollection(_presetEditFileTypes, selectedTypes.ToList());
         }
 
         /// <summary>
@@ -573,9 +550,12 @@ namespace ordoFile.ViewModels
         /// <summary>
         /// Remove selected filetypes from collection of available types.
         /// </summary>
-        void NewPresetRemoveTypes()
+        void NewPresetRemoveTypes(object selectedItems)
         {
-            GUIDispatcherUpdates.RemoveItemsFromCollection(_newPresetFileTypes, _newPresetSelectedTypes);
+            IList selectedItemList = (IList)selectedItems;
+            var selectedTypes = selectedItemList.Cast<string>();
+
+            GUIDispatcherUpdates.RemoveItemsFromCollection(_newPresetFileTypes, selectedTypes.ToList());
         }
 
         /// <summary>
