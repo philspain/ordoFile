@@ -26,7 +26,8 @@ namespace ordoFile.Views
             InitializeComponent();
 
             PresetsViewModel presetsViewModel = new PresetsViewModel();
-
+			
+			// Get presets
             presetsViewModel.Presets = (PresetFilters)DependencyFactory.Container.Resolve(typeof(PresetFilters), "presets");
 
             this.DataContext = presetsViewModel;
